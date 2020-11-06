@@ -1,0 +1,2245 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <title>HYBRID FTL VISUALIZATION</title>
+  <link href="./images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+  <head>
+    <link rel="stylesheet" type="text/css" href="semantic UI/semantic/semantic.css">
+    <script
+      src="https://code.jquery.com/jquery-3.1.1.min.js"
+      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+      crossorigin="anonymous"></script>
+    <script src="semantic UI/semantic/semantic.js"></script>
+  </head>
+  <style>
+    table {
+        border-collapse: collapse;
+        text-align: center;
+        line-height: 1.5;
+        border-collapse:collapse;
+        empty-cells: show | inherit;
+        font-size: 18px;
+    }
+    table th {
+      border-bottom:1px solid #CCC;
+      width: 50px;
+      height: 7.5px;
+      color: #fff;
+      background: #4B89DC;
+      font-size: 16px;
+    }
+    table td {
+      width: 26.25px;
+      height: : 7.5px
+      border-bottom: 1px solid #ccc;
+    }
+    body {
+      padding: 1rem;
+    }
+    h1 {
+      border-bottom: 1px solid;
+    }
+    #BMT {
+      position: absolute;
+    	left : 100px;
+    	top : 200px;
+    }
+    #PMT {
+      position: absolute;
+      left : 100px;
+      top : 400px;
+      display: none;
+    }
+    #OPERATION {
+      position: absolute;
+      left : 1400px;
+      top : 200px;
+      display: none;
+    }
+    #BMT_NAME {
+      position: absolute;
+      left: 40px;
+      top: 200px;
+      font-size: 20px;
+    }
+    #PMT_NAME {
+      position: absolute;
+      left: 40px;
+      top: 400px;
+      font-size: 20px;
+      display: none;
+    }
+    #DATA_BLK_NAME {
+      position: absolute;
+      left: 270px;
+      top: 200px;
+      font-size: 20px;
+    }
+    #LOG_BLK_NAME {
+      position: absolute;
+      left: 270px;
+      top: 400px;
+      font-size: 20px;
+    }
+    #Operate {
+      position: absolute;
+      left : 1400px;
+      top : 120px;
+      display: none;
+    }
+    #info {
+      position: absolute;
+      left: 370px;
+      top: 700px;
+      font-size: 30px;
+      /*color: #FFDC00;*/
+    }
+    .BLOCK {
+      position:absolute;
+    	left : 370px;
+    	top : 200px;
+    }
+    .LOG_BLOCK {
+      position:absolute;
+      left : 370px;
+      top : 400px;
+    }
+
+    .focus {
+      /* border:5px solid red; */
+      background: #F08080;
+    }
+    .invalid {
+      background: #a28089;
+    }
+    .valid {
+      background: #d0bdf4;
+    }
+
+  </style>
+  <body id="body">
+    <h1>HYBRID MAPPING (BAST) FTL VISUALIZATION</h1>
+    <div class="ui mini input focus placeholder">
+    <input type="text" id="LPN_input" placeholder="LPN" />
+    </div>
+    <div class="ui mini input focus">
+    <input type="text" id="DATA_input" placeholder="DATA" />
+    </div>
+    <input type="button" id="Write" class="ui primary button" value="Write" />
+    <div class="ui mini input focus placeholder">
+    <input type="text" id="LPN_input2" placeholder="LPN" />
+    </div>
+     <input type="button" id="Read" class="ui primary button" value="Read" />
+    <input type="button" id="play_pause" class="ui button" value="Play" />
+    <!-- <div class="ui floating dropdown labeled icon button">
+      <div class="text">Delay</div>
+      <i class="hourglass icon"></i>
+      <div class="menu">
+        <div class="item" id = "delay_up">Up</div>
+        <div class="item" id = "delay_down">Down</div>
+      </div>
+    </div> -->
+    <button class="ui icon button" id = "delay_up">
+      <i class="arrow up icon"></i>
+    </button>
+    <span>delay: </span>
+    <span id = "delay"></span>
+    <button class="ui icon button" id = "delay_down">
+      <i class="arrow down icon"></i>
+    </button>
+    <!-- <input type="button" id="delay_up" class="ui button" value="delay_up" />
+    <i class="angle up icon"></i>
+    <span id = "delay"></span>
+    <i class="angle down icon"></i>
+    <input type="button" id="delay_down" class="ui button" value="delay_down" /> -->
+
+    <button type="button" id="step_back" class="ui button"><i class="undo icon"></i>Step Back</button>
+    <button type="button" id="step_foward" class="ui button"><i class="redo icon"></i>Step Foward</button>
+
+    <button type="button" id="cancle" class="ui button"><i class="trash alternate icon"></i>cancel</button>
+    <span id = "Open_file">
+      <label for="file" class="ui button"><i class="file icon"></i> Open File</label> 
+      <input type="file" accept="text/plain" onchange="openFile(event)" id="file" style="display: none"/> 
+       <!-- <input type='file' accept='text/plain' onchange='openFile(event)' value="Open File"> -->
+    </span>
+    <div class="ui floating dropdown labeled icon button" id="Menu">
+      <div class="text">Menu</div>
+      <i class="bars icon"></i>
+      <div class="menu">
+        <div class="item">
+          <a href="./main.html">Home</a>
+        </div>
+        <div class="item">
+          <a href="./page_based_ftl.html">Page Based FTL</a>
+        </div>
+        <div class="item">
+          <a href="./sector_based_ftl.html">Sector Based FTL</a>
+        </div>
+        <div class="item">
+          <a href="./block_based_ftl.html">Block Based FTL</a>
+        </div>
+        
+        <div class="item">
+          <a href="./demand_based_ftl.html">DFTL</a>
+        </div>
+      </div>
+    </div>
+    <div class="ui floating dropdown labeled icon button" id = "Setting">
+      <div class="text">Setting</div>
+      <!-- <i class="dropdown icon"></i> -->
+      <i class="cog icon"></i>
+      <div class="menu">
+        <div class="item">
+          <div class="item" id = "data_blk_inc">DATA BLK <i class="arrow alternate circle up icon"></i></div>
+        </div>
+        <div class="item">
+          <div class="item" id = "data_blk_dec">DATA BLK <i class="arrow alternate circle down icon"></i></div>
+        </div>
+        <div class="item">
+          <div class="item" id = "log_blk_inc">LOG BLK <i class="arrow alternate circle up icon"></i></div>
+        </div>
+        <div class="item">
+          <div class="item" id = "log_blk_dec">LOG BLK <i class="arrow alternate circle down icon"></i></div>
+        </div>
+        <div class="item">
+          <div class="item" id = "page_per_blk_inc">Pages per BLK <i class="arrow alternate circle up icon"></i></div>
+        </div>
+        <div class="item">
+          <div class="item" id = "page_per_blk_dec">Pages per BLK <i class="arrow alternate circle down icon"></i></div>
+        </div>
+      </div>
+    </div>
+    <input type="button" id="Operate" class="ui primary button" value="Operate" />
+
+    <script>
+      function  find_char(str, chr) {
+        for(i = 0; i < str.length; i++)
+          if(str[i] == chr)
+            return true;
+        return false;
+      }
+      var openFile = function(event) {
+        var input = event.target;
+
+        var reader = new FileReader();
+        reader.onload = function(){
+          var text = reader.result;
+          // var node = document.getElementById('output');
+          // node.innerText = text;
+          var res = text.split(/\s+/);
+          for(var i = 0; i < res.length; i++)
+            console.log(res[i]);
+          // console.log(reader.result.substring(0, 200));
+          var temp_row = 0;
+          OPERATION_ROWS = 0;
+          var idx = 0;
+          var slot_idx = 0;
+          var hyphen_var;
+          var comma_var;
+          while(idx < res.length) {
+            if(res[idx] == 'read') {    
+              temp_row += 1;         
+              slot_idx += 1;
+            } else if(res[idx] == 'write') {
+              temp_row += 1;
+              slot_idx += 1;
+            }
+            idx += 1;
+          }
+          // for(var i = 0; i < temp_row; i++)
+          //   OPERATION_add_row();
+          $("#OPERATION").css("display", "block");
+          $("#Operate").css("display", "block");
+          idx = 0;
+          slot_idx = 0;
+          while(idx < res.length) {
+            if(res[idx] == 'read') {
+              idx += 1;
+              var lpn_isArray = false;
+              var lpn_var = res[idx];
+              if(find_char(lpn_var, '-') == true) {
+                lpn_isArray = true;
+                var lpn_temp = res[idx].split('-');
+                var lpn_length = Number(lpn_temp[1]) - Number(lpn_temp[0]);
+                console.log("lpn_temp[1]: " + lpn_temp[1]);
+                console.log("lpn_temp[0]: " + lpn_temp[0]);
+                lpn_var = Array();
+                for(var i = 0; i <= lpn_length; i++)
+                  lpn_var[i] = Number(lpn_temp[0]) + i;
+              } else if(find_char(lpn_var, ',') == true) {
+                lpn_isArray = true;
+                lpn_var = res[idx].split(',')
+              }
+
+              if(lpn_isArray) {
+                for(var i = 0; i < lpn_var.length; i++) {
+                  var lpn_input;
+                  if(i >= lpn_var.length)
+                    lpn_input = 0;
+                  else
+                    lpn_input = lpn_var[i];
+
+                  OPERATION_add_row();
+                  OPERATION_get_OPERATION(slot_idx).html('READ');
+                  OPERATION_get_LPN(slot_idx).html(lpn_input);
+                  OPERATION_get_DATA(slot_idx).html('empty');
+                  slot_idx += 1;
+                  OPERATION_ROWS += 1;
+                }
+              } else {
+                OPERATION_add_row();
+                OPERATION_get_OPERATION(slot_idx).html('READ');
+                OPERATION_get_LPN(slot_idx).html(lpn_var);
+                OPERATION_get_DATA(slot_idx).html('empty');
+                slot_idx += 1;
+                OPERATION_ROWS += 1;
+              }              
+            } else if(res[idx] == 'write') {
+              var lpn_isArray = false;
+              var data_isArray = false;
+              // OPERATION_get_OPERATION(slot_idx).html('WRITE');
+              idx += 1;
+              // var temp = res[idx].split('-');
+              // console.log(res[idx] + " hypen: " + res[idx].indexOf('-'));
+              // console.log(res[idx] + " comma: " + res[idx].indexOf(','));
+              var lpn_var = res[idx];
+              if(find_char(lpn_var, '-') == true) {
+                lpn_isArray = true;
+                var lpn_temp = res[idx].split('-');
+                var lpn_length = Number(lpn_temp[1]) - Number(lpn_temp[0]);
+                console.log("lpn_temp[1]: " + lpn_temp[1]);
+                console.log("lpn_temp[0]: " + lpn_temp[0]);
+                lpn_var = Array();
+                for(var i = 0; i <= lpn_length; i++)
+                  lpn_var[i] = Number(lpn_temp[0]) + i;
+              } else if(find_char(lpn_var, ',') == true) {
+                lpn_isArray = true;
+                lpn_var = res[idx].split(',')
+              }
+              // OPERATION_get_LPN(slot_idx).html(res[idx]);
+              idx += 1;
+              var data_var = res[idx];
+              if(find_char(data_var, '-') == true) {
+                data_isArray = true;
+                data_temp = res[idx].split('-');
+                var data_length = Number(data_temp[1]) - Number(data_temp[0]);
+                data_var = Array();
+                for(var i = 0; i <= data_length; i++)
+                  data_var[i] = Number(data_temp[0]) + i;
+              } else if(find_char(data_var, ',')) {
+                data_isArray = true;
+                data_var = res[idx].split(',');
+              }
+              // OPERATION_get_DATA(slot_idx).html(res[idx]);
+              if(lpn_isArray || data_isArray) {
+                for(var i = 0; i < lpn_var.length || i < data_var.length; i++) {
+                  var lpn_input;
+                  var data_input;
+                  if(i >= lpn_var.length)
+                    lpn_input = 0;
+                  else
+                    lpn_input = lpn_var[i];
+                  if(i >= data_var.length)
+                    data_input = 0;
+                  else
+                    data_input = data_var[i];
+
+                  OPERATION_add_row();
+                  OPERATION_get_OPERATION(slot_idx).html('WRITE');
+                  OPERATION_get_LPN(slot_idx).html(lpn_input);
+                  OPERATION_get_DATA(slot_idx).html(data_input);
+                  slot_idx += 1;
+                  OPERATION_ROWS += 1;
+                  console.log("isArray OPERATION_ROWS: " + OPERATION_ROWS);
+                  console.log("lpn_input: " + lpn_input);
+                  console.log("data_input: " + data_input);
+                }
+              } else {
+                OPERATION_add_row();
+                OPERATION_get_OPERATION(slot_idx).html('WRITE');
+                OPERATION_get_LPN(slot_idx).html(lpn_var);
+                OPERATION_get_DATA(slot_idx).html(data_var);
+                slot_idx += 1;
+                OPERATION_ROWS += 1;
+                console.log("NOArray OPERATION_ROWS: " + OPERATION_ROWS);
+              }
+            }
+            idx += 1;
+          }
+        };
+        reader.readAsText(input.files[0]);
+      };
+    </script>
+    <span id = "BMT_NAME">BMT</span>
+    <span id = "PMT_NAME">PMT</span>
+    <span id = "DATA_BLK_NAME">DATA<br>BLOCK</span>
+    <span id = "LOG_BLK_NAME">LOG<br>BLOCK</span>
+
+
+
+    <table id = "BMT">
+      <thead id = "BMT_head">
+        <th style="border-top-left-radius: 5px;">LBN</th>
+        <th style="border-top-right-radius: 5px;">PBN</th>
+      </thead>
+      <tbody id="BMT-tbody"></tbody>
+    </table>
+    <table id = "PMT">
+      <thead id = "PMT_head">
+        <th style="border-top-left-radius: 5px;">PPN</th>
+        <th style="border-top-right-radius: 5px;">LPN</th>
+      </thead>
+      <tbody id="PMT-tbody"></tbody>
+    </table>
+    <table id = "BLK0" class = "BLOCK">
+      <thead id = "BLK0_head">
+        <th style="border-top-left-radius: 5px;">PPN</th>
+        <th>DATA</th>
+        <th>LPN</th>
+        <th style="border-top-right-radius: 5px;">STATE</th>
+      </thead>
+      <tbody id="BLK0-tbody"></tbody>
+    </table>
+    <!-- <table id = "LOG_BLK0" class = "LOG_BLOCK">
+      <thead id = "LOG_BLK0_head">
+        <th style="border-top-left-radius: 5px;">PPN</th>
+        <th>DATA</th>
+        <th>LPN</th>
+        <th style="border-top-right-radius: 5px;">STATE</th>
+      </thead>
+      <tbody id="LOG_BLK0-tbody"></tbody>
+    </table> -->
+    <table id = "OPERATION">
+      <thead>
+        <th style="border-top-left-radius: 5px;">NUM</th>
+        <th>OPER</th>
+        <th>LPN</th>
+        <th style="border-top-right-radius: 5px;">DATA</th>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <script>
+      $('#body').append('<table id = "LOG_BLK0" class = "LOG_BLOCK"> <thead id = "LOG_BLK0_head"> <th style="border-top-left-radius: 5px;">PPN</th> <th>DATA</th> <th>LPN</th> <th style="border-top-right-radius: 5px;">STATE</th> </thead> <tbody id="LOG_BLK0-tbody"></tbody> </table>');
+      $('.ui.dropdown').dropdown({
+        direction: 'downward',
+        duration:800,
+        onChange: function(value, text, $choice) {
+        }
+      });
+      $.urlParam = function(name){
+          var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+          if (results==null){
+             return null;
+          }
+          else{
+             return results[1] || 0;
+          }
+      }
+      $("#play_pause").attr('disabled', true);
+      var stat_save_arr = new Array();
+      var stat_idx = -1;
+      var BLKS_PER_BANK = 4;
+      if($.urlParam('BLK') != null) {
+        BLKS_PER_BANK = Number($.urlParam('BLK'));
+      }
+      var LOG_BLKS_PER_BANK = 2;
+      if($.urlParam('LOG_BLK') != null) {
+        LOG_BLKS_PER_BANK = Number($.urlParam('LOG_BLK'));
+      }
+      var PAGES_PER_BLK = 4;
+      if($.urlParam('BLK_PAGE') != null) {
+        PAGES_PER_BLK = Number($.urlParam('BLK_PAGE'));
+      }
+      var PAGES_PER_BANK = BLKS_PER_BANK * PAGES_PER_BLK;
+      var LOG_PAGES_PER_BANK = LOG_BLKS_PER_BANK * PAGES_PER_BLK;
+      var LBNS = (BLKS_PER_BANK - 1);
+      var LPNS = PAGES_PER_BLK * LBNS - 1;
+      var LOG_LPNS = PAGES_PER_BLK * LOG_BLKS_PER_BANK;
+      var BMT_numofRAW = 0;
+      var PMT_numofRAW = 0;
+      var numofPAGE = 0;
+      var numofLOGPAGE = 0;
+      var numofBLK = 1;
+      var numofLOGBLK = 1;
+      var delay = 1500; 
+      var timeld = null;
+      var OPERATION_numofRAW = 0;
+      var OPERATION_ROWS = 5;
+      var OPERATION_CNT = 0;
+
+      $("#data_blk_inc").click(function() {
+        if(BLKS_PER_BANK >= 4) {
+          alert("MAX BLK NUM");
+          return;
+        }
+        var url = "./hybrid_mapping_ftl.html?BLK=" + (Number(BLKS_PER_BANK) + 1) + "&BLK_PAGE=" + (PAGES_PER_BLK) + "&LOG_BLK=" + Number(LOG_BLKS_PER_BANK);
+        $(location).attr('href', url);
+      });
+      $("#data_blk_dec").click(function() {
+        if(BLKS_PER_BANK <= 2) {
+          alert("MIN BLK NUM");
+          return;
+        }
+        var url = "./hybrid_mapping_ftl.html?BLK=" + (Number(BLKS_PER_BANK) - 1) + "&BLK_PAGE=" + (PAGES_PER_BLK) + "&LOG_BLK=" + Number(LOG_BLKS_PER_BANK);
+        $(location).attr('href', url);
+      });
+      $("#log_blk_inc").click(function() {
+        if(LOG_BLKS_PER_BANK >= 4) {
+          alert("MAX BLK NUM");
+          return;
+        }
+        var url = "./hybrid_mapping_ftl.html?BLK=" + (Number(BLKS_PER_BANK)) + "&BLK_PAGE=" + (PAGES_PER_BLK) + "&LOG_BLK=" + (Number(LOG_BLKS_PER_BANK) + 1);
+        $(location).attr('href', url);
+      });
+      $("#log_blk_dec").click(function() {
+        if(LOG_BLKS_PER_BANK <= 2) {
+          alert("MIN BLK NUM");
+          return;
+        }
+        var url = "./hybrid_mapping_ftl.html?BLK=" + (Number(BLKS_PER_BANK)) + "&BLK_PAGE=" + (PAGES_PER_BLK) + "&LOG_BLK=" + (Number(LOG_BLKS_PER_BANK) - 1);
+        $(location).attr('href', url);
+      });
+      $("#page_per_blk_inc").click(function() {
+        if(PAGES_PER_BLK >= 5) {
+          alert("MAX PAGE NUM");
+          return;
+        }
+        var url = "./hybrid_mapping_ftl.html?BLK=" + (Number(BLKS_PER_BANK)) + "&BLK_PAGE=" + (Number(PAGES_PER_BLK) +1) + "&LOG_BLK=" + Number(LOG_BLKS_PER_BANK);
+        $(location).attr('href', url);
+      });
+       $("#page_per_blk_dec").click(function() {
+        if(PAGES_PER_BLK <= 2) {
+          alert("MIN PAGE NUM");
+          return;
+        }
+        var url = "./hybrid_mapping_ftl.html?BLK=" + (Number(BLKS_PER_BANK)) + "&BLK_PAGE=" + (Number(PAGES_PER_BLK) - 1) + "&LOG_BLK=" + Number(LOG_BLKS_PER_BANK);
+        $(location).attr('href', url);
+      });
+
+      $('#cancle').click(function() {
+        cancle_func();
+      });
+
+      $('#delay').html(delay);
+
+      $('#delay_down').click(function() {
+        if(delay <= 0) {
+          alert("delay can't be under 0");
+          return;
+        }
+        delay -= 100;
+        $('#delay').html(delay);
+      });
+
+      $('#delay_up').click(function() {
+        if(delay >= 3000) {
+          alert("delay can't be over 3000");
+          return;
+        }
+        delay += 100;
+        $('#delay').html(delay);
+      });
+
+
+      $("#step_back").click( function() {
+        step_back_func();
+      });
+      $("#step_foward").click( function() {
+        step_foward_func();
+      });
+
+      $("#Write").click( function() {
+        var LPN_val = $("#LPN_input").val();
+        var DATA_val = $("#DATA_input").val();
+        if(LPN_val >= LPNS) {
+          alert("Wrong LPN number! (LPN range: 0 ~ " + (LPNS - 1) + ")");
+          return;
+        }
+
+        $("#LPN_input").val(''); $("#DATA_input").val('');
+        $("#play_pause").val('pause').attr('disabled', false);
+        $("#Write").attr('disabled', true);
+        $("#Read").attr('disabled', true);
+        $("#delay_up").attr('disabled', true);
+        $("#delay_down").attr('disabled', true);
+        $("#step_back").attr('disabled', true);
+        $("#step_foward").attr('disabled', true);
+        $("#cancle").attr('disabled', true);
+        $("#Operate").attr('disabled', true);
+        ftl_write(LPN_val, DATA_val);
+      });
+      $("#Read").click( function() {
+        var LPN_val = $("#LPN_input2").val();
+        if(LPN_val >= LPNS) {
+          alert("Wrong LPN number! (LPN range: 0 ~ " + (LPNS - 1) + ")");
+          return;
+        }
+
+        $("#LPN_input2").val('');
+        $("#play_pause").val('pause').attr('disabled', false);
+        $("#Write").attr('disabled', true);
+        $("#Read").attr('disabled', true);
+        $("#delay_up").attr('disabled', true);
+        $("#delay_down").attr('disabled', true);
+        $("#step_back").attr('disabled', true);
+        $("#step_foward").attr('disabled', true);
+        $("#cancle").attr('disabled', true);
+        $("#Operate").attr('disabled', true);
+        ftl_read(LPN_val, 0);
+      });
+      $("#Operate").click( function() {
+        var oper = OPERATION_get_OPERATION(0).html();
+        var LPN_val = OPERATION_get_LPN(0).html();
+        var DATA_val = OPERATION_get_DATA(0).html();
+        
+        if(LPN_val >= LPNS) {
+          alert("Wrong LPN number! (LPN range: 0 ~ " + (LPNS - 1) + ")");
+          return;
+        }
+
+        $("#play_pause").val('pause').attr('disabled', false);
+        $("#Write").attr('disabled', true);
+        $("#Operate").attr('disabled', true);
+        $("#Read").attr('disabled', true);
+        $("#delay_up").attr('disabled', true);
+        $("#delay_down").attr('disabled', true);
+        $("#step_back").attr('disabled', true);
+        $("#step_foward").attr('disabled', true);
+        $("#cancle").attr('disabled', true);
+
+        if(oper == 'WRITE')
+          ftl_write(LPN_val, DATA_val, 1);
+        if(oper == 'READ')
+          ftl_read(LPN_val, 1);
+      });
+
+      $("#play_pause").click( function() {
+        if(timeld == null) {
+          animation_func();
+          $("#delay_up").attr('disabled', true);
+          $("#delay_down").attr('disabled', true);
+          $("#step_back").attr('disabled', true);
+          $("#step_foward").attr('disabled', true);
+          timeld = setInterval(animation_func, delay);
+          $(this).val('pause');
+        }
+        else {
+          clearInterval(timeld);
+          $(this).val('play');
+          $("#delay_up").attr('disabled', false);
+          $("#delay_down").attr('disabled', false);
+          $("#step_back").attr('disabled', false);
+          $("#step_foward").attr('disabled', false);
+          timeld = null;
+        }
+      });
+
+
+      function ftl_write(lpn, data, oper) {
+        var step_info;
+        add_stat();
+        if(stat_idx > 0)
+          copy_stat(stat_idx, stat_idx - 1);
+
+        if(oper == 1) {
+          var step_info = alloc_step();
+          step_info.motion = 'operation start';
+          step_info.info = 'Operate First Line';
+        }
+
+        var now_stat = stat_save_arr[stat_idx];
+        var lbn = calc_lbn(lpn);
+        var offset = calc_offset(lpn);
+        var pbn = now_stat.bmt[lbn];
+        var replaced = 0;
+
+        if(gc_condition_check(lpn, lbn, offset, pbn, data, now_stat)) {
+          replaced = garbage_collection(lpn, lbn, offset, pbn, data, now_stat);
+          now_stat = stat_save_arr[stat_idx];
+          pbn = now_stat.bmt[lbn];
+        }
+
+        if(replaced == 0) {
+          if(data_gc_condition_check(lpn, lbn, offset, pbn, data, now_stat)) {  //log blk write
+            var matching_log_blk = get_matching_log_blk(lpn, lbn, offset, pbn, data, now_stat);  //log blk gc condition check here!
+            var page_to_write = get_log_page_to_write(now_stat, matching_log_blk, pbn);    //include increasing of page_to_write, also check log blk gc condition
+
+            var ppn = find_log_blk_ppn(lpn, matching_log_blk, now_stat);
+            if(ppn != -1) {
+              log_make_invalid(now_stat, ppn);
+            }
+            var is_invalided = invalid_data_blk(now_stat, lpn, pbn, offset);
+            
+            now_stat.log_page_data[page_to_write] = data;
+            now_stat.log_page_spare[page_to_write] = lpn;
+            now_stat.log_page_stat[page_to_write] = 'valid';
+
+            //animation here
+            var step_info = alloc_step();
+            step_info.motion = 'log write page';
+            step_info.info = 'Write Log Page';
+            step_info.page_num = page_to_write;
+            step_info.data = data;
+            step_info.lpn = lpn;
+            step_info.is_invalided = is_invalided;
+            step_info.invalid_page = -1;
+            if(is_invalided) {
+              step_info.invalid_page = Number(pbn * PAGES_PER_BLK + offset);
+              step_info.origin_data = now_stat.page_data[step_info.invalid_page];
+            }
+
+            // LOG_BLK_get_DATA(page_to_write).html(data);
+            // LOG_BLK_get_LPN(page_to_write).html(lpn);
+            // LOG_BLK_get_STATE(page_to_write).html('valid');
+            // else if(step_info.motion == 'log write page') {
+            //   save_step_stat(step_info);
+            //   LOG_BLK_get_PPN_data(step_info.page_num).addClass('focus');
+            //   LOG_BLK_get_STATE(step_info.page_num).addClass('focus');
+            //   LOG_BLK_get_DATA(step_info.page_num).addClass('focus');
+            //   LOG_BLK_get_LPN(step_info.page_num).addClass('focus');
+            //   setTimeout(function() {
+            //     LOG_BLK_get_PPN_data(step_info.page_num).removeClass('focus').addClass('valid');
+            //     LOG_BLK_get_STATE(step_info.page_num).removeClass('focus').addClass('valid').html('valid');
+            //     LOG_BLK_get_DATA(step_info.page_num).removeClass('focus').addClass('valid').html(step_info.data);
+            //     LOG_BLK_get_LPN(step_info.page_num).removeClass('focus').addClass('valid').html(step_info.lpn);
+            //   }, delay / 2);
+            // }
+          } else {                                                              //data blk write
+            if(pbn == -1) {
+              pbn = get_free_blk_idx(now_stat);
+              now_stat.bmt[lbn] = pbn;
+
+              //save animation
+              var step_info = alloc_step();
+              step_info.motion = 'change pbn';
+              step_info.info = 'Change PBN';
+              step_info.lbn = lbn;
+              step_info.pbn = pbn;
+              // BMT_get_PBN(lbn).html(pbn);
+            }
+            write_data_to_ppn(lpn, data, lbn, pbn, offset, now_stat);
+          }
+        }
+       
+        if(oper == 1) {
+          step_info = alloc_step();
+          step_info.motion = 'operation finish';
+          step_info.info = 'Delete First Line';
+        }
+
+        animation_func();
+        timeld = setInterval(animation_func, delay);
+      }
+
+      function ftl_read(lpn, oper) {
+        var step_info;
+        add_stat();
+        if(stat_idx > 0)
+          copy_stat(stat_idx, stat_idx - 1);
+
+        if(oper == 1) {
+          step_info = alloc_step();
+          step_info.motion = 'operation start';
+          step_info.info = 'Operate First Line';
+        }
+
+        var now_stat = stat_save_arr[stat_idx];
+        var lbn = calc_lbn(lpn);
+        var offset = calc_offset(lpn);
+        var pbn = now_stat.bmt[lbn];
+
+        step_info = alloc_step();
+        step_info.motion = 'change pbn';
+        step_info.info = 'Check PBN';
+        step_info.lbn = lbn;
+        step_info.pbn = pbn;
+
+        if(pbn == -1) {
+          step_info.info = ': none';
+          step_info.pbn = 'none';
+        } else {
+          var page_num = pbn * PAGES_PER_BLK + offset;
+          if(now_stat.page_stat[page_num] == 'valid') {
+            step_info = alloc_step();
+            step_info.motion = 'write page';
+            step_info.info = 'Read Data: ' + now_stat.page_data[page_num];
+            step_info.page_num = page_num;
+            step_info.data = now_stat.page_data[page_num];
+            step_info.lpn = now_stat.page_spare[page_num];
+          } else if(now_stat.page_stat[page_num] == 'empty') {
+            step_info = alloc_step();
+            step_info.motion = 'make empty';
+            step_info.info = 'Read Data: Empty';
+            step_info.page_num = page_num;
+          } else {
+            var matching_log_blk = now_stat.matching_log_blk[lbn];
+            if(matching_log_blk != -1) {
+              if(find_log_blk_ppn(lpn, matching_log_blk, now_stat) != -1) {
+                var log_page_num = find_log_blk_ppn(lpn, matching_log_blk, now_stat);
+                step_info = alloc_step();
+                step_info.motion = 'log write page';
+                step_info.info = 'Read Data: ' + now_stat.log_page_data[log_page_num];
+                step_info.page_num = log_page_num;
+                step_info.is_invalided = false;
+                step_info.data = now_stat.log_page_data[log_page_num];
+                step_info.lpn = now_stat.log_page_spare[log_page_num];
+              }
+            } else {
+              step_info = alloc_step();
+              step_info.motion = 'make invalid';
+              step_info.info = 'Read Data: Invalid';
+              step_info.page_num = page_num;
+            }
+          }
+        }
+
+
+        
+        if(oper == 1) {
+          step_info = alloc_step();
+          step_info.motion = 'operation finish';
+          step_info.info = 'Delete First Line';
+        }
+
+        animation_func();
+        timeld = setInterval(animation_func, delay);
+      }
+
+      function invalid_data_blk(now_stat, lpn, pbn, offset) {
+        console.log("invalid_data_blk");
+        var page = pbn * PAGES_PER_BLK + offset;
+        if(now_stat.page_stat[page] == 'invalid')
+          return false;
+        now_stat.page_stat[page] = 'invalid';
+        return true;
+
+        // //animation
+        // BLK_get_STATE(page).html('invalid');
+      }
+
+      // stat_save_arr[stat_idx].pmt = new Array();
+      // stat_save_arr[stat_idx].log_page_stat = new Array();
+      // stat_save_arr[stat_idx].log_page_data = new Array();
+      // stat_save_arr[stat_idx].log_page_spare = new Array();
+
+      // stat_save_arr[stat_idx].matching_log_blk = new Array();
+      // stat_save_arr[stat_idx].free_log_blk_num = LOG_BLKS_PER_BANK;
+      function get_matching_log_blk(lpn, lbn, offset, pbn, data, now_stat) {
+        if(now_stat.matching_log_blk[lbn] != -1) {
+          console.log("This block already has matching log blk");
+          return now_stat.matching_log_blk[lbn];
+        }
+        var log_blk = -1;
+        
+        for(var cand = 0; cand < LOG_BLKS_PER_BANK; cand++) {
+          var can_use = 1;
+          for(var i = 0; i < LBNS; i++) {
+            if(now_stat.matching_log_blk[i] == cand)
+              can_use = 0;
+          }
+          if(can_use == 1) {
+            now_stat.matching_log_blk[lbn] = cand;
+            now_stat.free_log_blk_num -= 1;
+            return cand;
+          }
+        }
+
+        //GC condition
+        log_garbage_collection(now_stat);
+      }
+      function get_log_page_to_write(now_stat, matching_log_blk, pbn) {
+        for(var offset = 0; offset < PAGES_PER_BLK; offset++) {
+          var page_to_write = matching_log_blk * PAGES_PER_BLK + offset;
+          if(now_stat.log_page_stat[page_to_write] == 'empty') {
+            return page_to_write;
+          }
+        }
+        return matching_log_blk * PAGES_PER_BLK + offset;
+        // //GC condition
+        // log_garbage_collection2(now_stat, matching_log_blk, data_blk);
+      }
+      // function log_garbage_collection2(now_stat, log_blk, data_blk, lbn, lpn, data) {
+      //     if(switch_merge_check(now_stat, log_blk, data_blk)) {
+      //         for(var i = 0; i < PAGES_PER_BLK; i++) {
+      //           var data_blk_page = data_blk * PAGES_PER_BLK + i;
+      //           var log_blk_page = log_blk * PAGES_PER_BLK + i;
+      //           now_stat.page_data[data_blk_page] = now_stat.log_page_data[log_blk_page];
+      //           now_stat.page_spare[data_blk_page] = now_stat.log_page_spare[log_blk_page];
+      //           now_stat.page_stat[data_blk_page] =   now_stat.log_page_stat[log_blk_page];
+
+      //           now_stat.log_page_data[log_blk_page] = -1;
+      //           now_stat.log_page_spare[log_blk_page] = -1;
+      //           now_stat.log_page_stat[log_blk_page] = 'empty';
+
+      //           //animation
+      //           BLK_get_DATA(data_blk_page).html(now_stat.page_data[data_blk_page]);
+      //           BLK_get_LPN(data_blk_page).html(now_stat.page_spare[data_blk_page]);
+      //           BLK_get_STATE(data_blk_page).html(now_stat.page_stat[data_blk_page]);
+      //           //animation
+      //           LOG_BLK_get_DATA(log_blk_page).html('');
+      //           LOG_BLK_get_LPN(log_blk_page).html('');
+      //           LOG_BLK_get_STATE(log_blk_page).html('empty');
+
+      //           now_stat.matching_log_blk[lbn] = -1;
+      //         }
+      //     }
+      // }
+      // function switch_merge_check(now_stat, log_blk, data_blk) {
+      //   for(var i = 0; i < PAGES_PER_BLK; i++) {
+      //     var data_blk_page = data_blk * PAGES_PER_BLK + i;
+      //     var log_blk_page = log_blk * PAGES_PER_BLK + i;
+      //     if(now_stat.page_stat[data_blk_page] != 'invalid' || now_stat.pages)
+      //   }
+      // }
+      function find_log_blk_ppn(lpn, matching_log_blk, now_stat) {
+        for(var i = 0; i < PAGES_PER_BLK; i++) {
+          var ppn = PAGES_PER_BLK * matching_log_blk + i; 
+          if(now_stat.log_page_stat[ppn] == 'valid' && now_stat.log_page_spare[ppn] == lpn) {
+            return ppn;
+          }
+        }
+        return -1;
+      }
+      function log_make_invalid(now_stat, ppn) {
+        now_stat.log_page_stat[ppn] = 'invalid';
+
+        var step_info = alloc_step();
+        step_info.motion = 'log make invalid';
+        step_info.info = 'Make Invalid';
+        step_info.ppn = ppn;
+        //animation
+        // LOG_BLK_get_STATE(ppn).html('invalid');
+      }
+      function log_change_pmt(now_stat, ppn, lpn) {
+        //animation
+        PMT_get_LPN(ppn).html(lpn);
+      }
+
+      function get_free_blk_idx(now_stat) {
+        for(var i = 0; i < BLKS_PER_BANK; i++) {
+          if(now_stat.free_blk_idx != i) {
+            for(var j = 0; j < PAGES_PER_BLK; j++) {
+              var page_num = i * PAGES_PER_BLK + j;
+              if(now_stat.page_stat[page_num] != 'empty')
+                break;
+              if(page_num - i * PAGES_PER_BLK == PAGES_PER_BLK - 1)
+                return i;
+            }
+          }
+        }
+        return -2; //something wrong
+      }
+
+      function calc_lbn(lpn) {
+        return parseInt(lpn / PAGES_PER_BLK);
+      }
+      function calc_offset(lpn) {
+        return lpn % PAGES_PER_BLK;
+      }
+      function write_data_to_ppn(lpn, data, lbn, pbn, offset, now_stat) {
+        var step_info;
+        for(var i = 0; i < offset; i++) {
+          var page_num = pbn * PAGES_PER_BLK + i;
+          if(now_stat.page_stat[page_num] == 'empty') {
+            now_stat.page_stat[page_num] = 'invalid';
+            now_stat.page_spare[page_num] = lpn - offset + i;
+
+            step_info = alloc_step();
+            step_info.motion = 'make invalid';
+            step_info.info = 'Make Invalid';
+            step_info.page_num = page_num;
+            step_info.lpn = lpn - offset + i;
+            // BLK_get_STATE(page_num).html('invalid');
+          }
+        }
+        var page_num = pbn * PAGES_PER_BLK + offset;
+        now_stat.page_stat[page_num] = 'valid';
+        now_stat.page_data[page_num] = data;
+        now_stat.page_spare[page_num] = lpn;
+
+        step_info = alloc_step();
+        step_info.motion = 'write page';
+        step_info.info = 'Write Page';
+        step_info.page_num = page_num;
+        step_info.data = data;
+        step_info.lpn = lpn;
+
+        // BLK_get_STATE(page_num).html('valid');
+        // BLK_get_DATA(page_num).html(data);
+        // BLK_get_LPN(page_num).html(lpn);
+      }
+
+      function gc_condition_check(lpn, lbn, offset, pbn, data, now_stat) {
+        if(data_gc_condition_check(lpn, lbn, offset, pbn, data, now_stat) == false)
+          return false;
+          
+        if(now_stat.matching_log_blk[lbn] == -1 && now_stat.free_log_blk_num == 0) {
+          console.log("gc other blk")
+          return true;
+        }
+        else if(now_stat.matching_log_blk[lbn] == -1 && now_stat.free_log_blk_num != 0)
+          return false;
+
+        var matching_log_blk = get_matching_log_blk(lpn, lbn, offset, pbn, data, now_stat);
+        var page_to_write = get_log_page_to_write(now_stat, matching_log_blk, pbn);
+
+        if(page_to_write >= ( (matching_log_blk + 1) * (PAGES_PER_BLK)) ) {        
+          console.log("gc this blk")
+          return true;
+        }
+
+        return false;
+
+
+        // if(pbn == -1)
+        //   return false;
+        // var page_num = pbn * PAGES_PER_BLK + offset;
+        // var blk_num = page_num / PAGES_PER_BLK;
+        // console.log("page_num: " + page_num);
+        // console.log("blk_num: " + blk_num);
+        // console.log("now_stat.page_stat: " + now_stat.page_stat[page_num]);
+        // console.log("free_blk_idx: " + now_stat.free_blk_idx);
+        // if(page_num >= PAGES_PER_BANK || now_stat.page_stat[page_num] != 'empty' || blk_num == now_stat.free_blk_idx)
+        //   return true;
+        // return false;
+      }
+
+      function data_gc_condition_check(lpn, lbn, offset, pbn, data, now_stat) {
+        if(pbn == -1)
+          return false;
+
+        var page_num = pbn * PAGES_PER_BLK + offset;
+        var blk_num = parseInt(page_num / PAGES_PER_BLK);
+
+        if(page_num >= PAGES_PER_BANK || now_stat.page_stat[page_num] != 'empty' || blk_num == now_stat.free_blk_idx) {
+          return true;
+        }
+        return false;
+      }
+
+      function garbage_collection(lpn, lbn, offset, pbn, data, now_stat) {
+        console.log("<<<garbage_collection called>>>");
+        var replaced = 0;
+
+        if(now_stat.matching_log_blk[lbn] == -1 && now_stat.free_log_blk_num == 0) {
+          console.log("gc other blk");
+          var victim_blk = get_victim_blk(now_stat,lpn,lbn,offset,pbn,data);
+          lbn = victim_blk;
+          pbn = now_stat.bmt[victim_blk];
+        }
+
+          var matching_log_blk = now_stat.matching_log_blk[lbn];
+
+          if(switch_merge_check(now_stat, pbn, matching_log_blk, lbn)) {
+            switch_merge(lpn, lbn, offset, pbn, data, now_stat, matching_log_blk);
+          }
+          else if(partial_merge_check(now_stat, pbn, matching_log_blk, lbn)) {
+            for(var i = 0; i < PAGES_PER_BLK; i++) {
+              var data_blk_page = pbn * PAGES_PER_BLK + i;
+              var log_blk_page = matching_log_blk * PAGES_PER_BLK + i;
+              if(now_stat.log_page_stat[log_blk_page] == 'empty' && now_stat.page_stat[data_blk_page] != 'empty') {
+                now_stat.log_page_data[log_blk_page] = now_stat.page_data[data_blk_page];
+                now_stat.log_page_spare[log_blk_page] = now_stat.page_spare[data_blk_page];
+                now_stat.log_page_stat[log_blk_page] =   now_stat.page_stat[data_blk_page];
+
+                now_stat.page_data[data_blk_page] = -1;
+                now_stat.page_spare[data_blk_page] = -1;
+                now_stat.page_stat[data_blk_page] = 'empty';
+
+                //animation
+                // LOG_BLK_get_DATA(log_blk_page).html(now_stat.log_page_data[log_blk_page]);
+                // LOG_BLK_get_LPN(log_blk_page).html(now_stat.log_page_spare[log_blk_page]);
+                // LOG_BLK_get_STATE(log_blk_page).html(now_stat.log_page_stat[log_blk_page]);
+                // BLK_get_DATA(data_blk_page).html('');
+                // BLK_get_LPN(data_blk_page).html('');
+                // BLK_get_STATE(data_blk_page).html('empty');
+                var step_info = alloc_step();
+                step_info.motion = 'partial move page';
+                step_info.info = 'Move Page';
+                step_info.data = now_stat.log_page_data[log_blk_page];
+                step_info.spare = now_stat.log_page_spare[log_blk_page];
+                step_info.stat = now_stat.log_page_stat[log_blk_page];
+                step_info.data_page = data_blk_page;
+                step_info.log_page = log_blk_page;
+              } else if(now_stat. log_page_stat[log_blk_page] != 'empty' && now_stat.page_stat[data_blk_page] != 'empty') {
+                var step_info = alloc_step();
+                step_info.motion = 'delete page';
+                step_info.info = 'Empty Page';
+                step_info.data_page = data_blk_page;
+              }
+            }
+            switch_merge(lpn, lbn, offset, pbn, data, now_stat, matching_log_blk);
+          } else {  //Full merge
+            var last_lpn = find_last_lpn(now_stat, lpn, lbn, pbn, matching_log_blk);
+            for(var i = 0; i < PAGES_PER_BLK; i++) {
+              var matching_lpn = lbn * PAGES_PER_BLK + i;
+              var free_blk_ppn = now_stat.free_blk_idx * PAGES_PER_BLK + i;
+              var step_info;
+              if(matching_lpn > last_lpn)
+                break;
+              if(matching_lpn == lpn) {
+                replaced = 1;
+                now_stat.page_data[free_blk_ppn] = data;
+                now_stat.page_spare[free_blk_ppn] = lpn;
+                now_stat.page_stat[free_blk_ppn] = 'valid';
+                
+                step_info = alloc_step();
+                step_info.motion = 'replace';
+                step_info.info = 'Write New Page';
+                step_info.free_blk_ppn = free_blk_ppn;
+                step_info.data = data;
+                step_info.lpn = lpn;
+              } else if(find_in_data_blk(now_stat, lpn, lbn, pbn, matching_log_blk, matching_lpn)) {
+                console.log("find_in_data_blk");
+                console.log("matching_lpn: " + matching_lpn);
+                var data_page = pbn * PAGES_PER_BLK + i;
+                now_stat.page_data[free_blk_ppn] = now_stat.page_data[data_page];
+                now_stat.page_spare[free_blk_ppn] = now_stat.page_spare[data_page];
+                now_stat.page_stat[free_blk_ppn] = now_stat.page_stat[data_page];
+
+                now_stat.page_data[data_page] = -1;
+                now_stat.page_spare[data_page] = -1;
+                now_stat.page_stat[data_page] = 'empty';
+               
+                step_info = alloc_step();
+                step_info.motion = 'find in data blk';
+                step_info.info = 'Move Page';
+                step_info.free_blk_ppn = free_blk_ppn;
+                step_info.data = now_stat.page_data[free_blk_ppn];
+                step_info.lpn = now_stat.page_spare[free_blk_ppn];
+                step_info.data_page = data_page;
+              } else if(find_in_log_blk(now_stat, lpn, lbn, pbn, matching_log_blk, matching_lpn)) {
+                console.log("find_in_log_blk");
+                console.log("matching_lpn: " + matching_lpn);
+                var log_page = (find_log_page(now_stat, lpn, lbn, pbn, matching_log_blk, matching_lpn));
+                now_stat.page_data[free_blk_ppn] = now_stat.log_page_data[log_page];
+                now_stat.page_spare[free_blk_ppn] = now_stat.log_page_spare[log_page];
+                now_stat.page_stat[free_blk_ppn] = now_stat.log_page_stat[log_page];
+
+                now_stat.log_page_data[log_page] = -1;
+                now_stat.log_page_spare[log_page] = -1;
+                now_stat.log_page_stat[log_page] = 'empty';
+                
+                step_info = alloc_step();
+                step_info.motion = 'find in log blk';
+                step_info.info = 'Move Page';
+                step_info.free_blk_ppn = free_blk_ppn;
+                step_info.data = now_stat.page_data[free_blk_ppn];
+                step_info.lpn = now_stat.page_spare[free_blk_ppn];
+                step_info.log_page = log_page;
+              } else {
+                console.log("none");
+                //no matching page
+                now_stat.page_data[free_blk_ppn] = -1;
+                now_stat.page_spare[free_blk_ppn] = matching_lpn;
+                now_stat.page_stat[free_blk_ppn] = 'invalid';
+                step_info = alloc_step();
+                step_info.motion = 'none';
+                step_info.info = 'Make Invalid Page';
+                step_info.free_blk_ppn = free_blk_ppn;
+                step_info.lpn = matching_lpn;
+              }
+            }
+            for(var i = 0; i < PAGES_PER_BLK; i++) {
+              var data_page = pbn * PAGES_PER_BLK + i;
+              var log_page = matching_log_blk * PAGES_PER_BLK + i;
+
+              now_stat.page_data[data_page] = -1;
+              now_stat.page_spare[data_page] = -1;
+              now_stat.page_stat[data_page] = 'empty';
+              now_stat.log_page_data[log_page] = -1;
+              now_stat.log_page_spare[log_page] = -1;
+              now_stat.log_page_stat[log_page] = 'empty';
+            }
+
+            var step_info = alloc_step();
+            step_info.motion = 'make empty blk';
+            step_info.info = 'Empty BLK';
+            step_info.pbn = pbn;
+            step_info.matching_log_blk = matching_log_blk;
+
+            now_stat.matching_log_blk[lbn] = -1;
+            now_stat.bmt[lbn] = now_stat.free_blk_idx;
+            now_stat.free_blk_idx = pbn;
+            now_stat.free_log_blk_num += 1;
+
+            //animation
+            // BMT_get_PBN(lbn).html(now_stat.bmt[lbn]);
+            step_info = alloc_step();
+            step_info.motion = 'change pbn';
+            step_info.info = 'Change PBN';
+            step_info.lbn = lbn;
+            step_info.pbn = now_stat.bmt[lbn];
+          }
+          return replaced;
+      }
+
+      function get_victim_blk(now_stat,lpn,lbn,offset,pbn,data) {
+        console.log("get_victim_blk");
+        //switch merge check
+        for(var i = 0; i < BLKS_PER_BANK; i++) {
+          var matching_log_blk = now_stat.matching_log_blk[i];
+          if(matching_log_blk != -1 && switch_merge_check(now_stat, now_stat.bmt[i], matching_log_blk, i))
+            return i;
+        }
+
+        //partial merge check
+        var selected_blk = -1;
+        var valid_num = PAGES_PER_BLK + 1;
+        for(var i = 0; i < BLKS_PER_BANK; i++) {
+          var matching_log_blk = now_stat.matching_log_blk[i];
+          if(matching_log_blk != -1 && partial_merge_check(now_stat, now_stat.bmt[i], matching_log_blk, i)) {
+            var cand_valid_num = calc_valid_page_num(now_stat, i, "data blk");
+            console.log("partial merge cand blk: " + i);
+            console.log("cand_valid_num: " + cand_valid_num);
+            if(cand_valid_num < valid_num) {
+              selected_blk = i;
+              valid_num = cand_valid_num;
+            }
+          }
+        }
+        if(selected_blk != -1) {
+          console.log("selected_blk: " + selected_blk);
+          return selected_blk;
+        }
+
+        //full merge
+        selected_blk = -1;
+        valid_num = PAGES_PER_BLK * 50;
+        for(var i = 0; i < BLKS_PER_BANK; i++) {
+          var matching_log_blk = now_stat.matching_log_blk[i];
+          if(matching_log_blk != -1) {
+            var cand = calc_valid_page_num(now_stat, i, "data blk");
+            cand += calc_valid_page_num(now_stat, matching_log_blk, "log blk");
+            if(cand < valid_num) {
+              selected_blk = i;
+              valid_num = cand;
+            }
+          }
+        }
+        if(selected_blk == -1) {
+          console.log("get_victim_blk func has something wrong");
+        }
+        return selected_blk;
+      }
+      function calc_valid_page_num(now_stat, blk, type) {
+        if(type == "data blk") {
+          var ret = 0;
+          for(var i = 0; i < PAGES_PER_BLK; i++) {
+            var page_num = blk * PAGES_PER_BLK + i;
+            if(now_stat.page_stat[page_num] == 'valid') {
+              ret += 1;
+            }
+          }
+          return ret;
+        } else {
+          var ret = 0;
+          for(var i = 0; i < PAGES_PER_BLK; i++) {
+            var page_num = blk * PAGES_PER_BLK + i;
+            if(now_stat.log_page_stat[page_num] == 'valid') {
+              ret += 1;
+            }
+            return ret;
+          }
+        }
+      }
+      function find_log_page(now_stat, lpn, lbn, pbn, matching_log_blk, matching_lpn) {
+        for(var i = 0; i < PAGES_PER_BLK; i++) {
+          var page_num = matching_log_blk * PAGES_PER_BLK + i;
+          if(now_stat.log_page_spare[page_num] == matching_lpn && now_stat.log_page_stat[page_num] == 'valid')
+            return page_num;
+        }
+        return -1;
+      }
+      function find_in_log_blk(now_stat, lpn, lbn, pbn, matching_log_blk, matching_lpn) {
+        console.log("<<find_in_log_blk>>");
+        console.log("matching_lpn: " + matching_lpn);
+        console.log("matching_log_blk: " + matching_log_blk);
+        for(var i = 0; i < PAGES_PER_BLK; i++) {
+          var page_num = matching_log_blk * PAGES_PER_BLK + i;
+          console.log("page_num: " + page_num);
+          console.log("log_page_spare: " + now_stat.log_page_spare[page_num]);
+          if(now_stat.log_page_spare[page_num] == matching_lpn && now_stat.log_page_stat[page_num] == 'valid')
+            return true;
+        }
+        return false;
+      }
+      function find_in_data_blk(now_stat, lpn, lbn, pbn, matching_log_blk, matching_lpn) {
+        for(var i = 0; i < PAGES_PER_BLK; i++) {
+          var page_num = pbn * PAGES_PER_BLK + i;
+          if(now_stat.page_spare[page_num] == matching_lpn && now_stat.page_stat[page_num] == 'valid')
+            return true;
+        }
+        return false;
+      }
+      function find_last_lpn(now_stat, lpn, lbn, pbn, matching_log_blk) {
+        var last_lpn = -1;
+        for(var i = 0; i < PAGES_PER_BLK; i++) {
+          var data_page = pbn * PAGES_PER_BLK + i;
+          var log_page = matching_log_blk * PAGES_PER_BLK + i;
+          if(now_stat.page_stat[data_page] == 'valid' && now_stat.page_spare[data_page] > last_lpn)
+            last_lpn = now_stat.page_spare[data_page];
+          if(now_stat.log_page_stat[log_page] == 'valid' && now_stat.log_page_spare[log_page] > last_lpn)
+            last_lpn = now_stat.log_page_spare[data_page];
+        }
+      }
+      function partial_merge_check(now_stat, pbn, matching_log_blk, lbn) {
+        for(var i = 0; i < PAGES_PER_BLK; i++) {
+          var data_blk_page = pbn * PAGES_PER_BLK + i;
+          var log_blk_page = matching_log_blk * PAGES_PER_BLK + i;
+          var lpn = lbn * PAGES_PER_BLK + i;
+          if(now_stat.log_page_stat[log_blk_page] == 'empty')
+            return true;
+          if(now_stat.log_page_spare[log_blk_page] != lpn || now_stat.log_page_stat[log_blk_page] == 'invalid')
+            return false;
+          
+        }
+        return true;
+      }
+      function switch_merge(lpn, lbn, offset, pbn, data, now_stat, matching_log_blk) {
+        console.log("switch merge!");
+        var step_info = alloc_step();
+        step_info.data = new Array();
+        step_info.spare = new Array();
+        step_info.stat = new Array();
+        step_info.lbn = lbn;
+        for(var i = 0; i < PAGES_PER_BLK; i++) {
+          var data_blk_page = pbn * PAGES_PER_BLK + i;
+          var log_blk_page = matching_log_blk * PAGES_PER_BLK + i;
+          now_stat.page_data[data_blk_page] = now_stat.log_page_data[log_blk_page];
+          now_stat.page_spare[data_blk_page] = now_stat.log_page_spare[log_blk_page];
+          now_stat.page_stat[data_blk_page] =   now_stat.log_page_stat[log_blk_page];
+
+          step_info.data[i] = now_stat.log_page_data[log_blk_page];
+          step_info.spare[i] = now_stat.log_page_spare[log_blk_page];
+          step_info.stat[i] = now_stat.log_page_stat[log_blk_page];
+
+          now_stat.log_page_data[log_blk_page] = -1;
+          now_stat.log_page_spare[log_blk_page] = -1;
+          now_stat.log_page_stat[log_blk_page] = 'empty';
+
+          //animation
+          //you must think about the situation when just first page of the log blk is valid and the others all empty.
+          //in this situation, the left pages without first page are seemed to empty page to users!
+          // if(now_stat.page_data[data_blk_page] == -1)
+          //   BLK_get_DATA(data_blk_page).html("none");
+          // else
+          //   BLK_get_DATA(data_blk_page).html(now_stat.page_data[data_blk_page]);
+          // BLK_get_LPN(data_blk_page).html(now_stat.page_spare[data_blk_page]);
+          // BLK_get_STATE(data_blk_page).html(now_stat.page_stat[data_blk_page]);
+
+          // LOG_BLK_get_DATA(log_blk_page).html('');
+          // LOG_BLK_get_LPN(log_blk_page).html('');
+          // LOG_BLK_get_STATE(log_blk_page).html('empty');
+        }
+        step_info.motion = 'switch merge';
+        step_info.info = 'Switch Merge';
+        step_info.log_blk = matching_log_blk;
+        step_info.data_blk = pbn;
+        step_info.now_stat = now_stat;
+
+        now_stat.matching_log_blk[lbn] = -1;
+        now_stat.free_log_blk_num += 1;
+      }
+
+      function switch_merge_check(now_stat, pbn, matching_log_blk, lbn) {
+        for(var i = 0; i < PAGES_PER_BLK; i++) {
+          var data_page = pbn * PAGES_PER_BLK + i;
+          if(now_stat.page_stat[data_page] == 'valid')
+            return false;
+        }
+        for(var i = 0; i < PAGES_PER_BLK; i++) {
+          var log_page = matching_log_blk * PAGES_PER_BLK + i;
+          var lpn = lbn * PAGES_PER_BLK + i;
+          if(now_stat.log_page_stat[log_page] == 'empty')
+            return true;
+          if(now_stat.log_page_spare[log_page] != lpn)
+            return false;
+        }
+        return true;
+      }
+
+      function cancle_func() {
+        if(stat_idx == -1) {
+          alert("initial state!");
+          return;
+        }
+        $("#BMT").remove();
+        $("#PMT").remove();
+        for(var i = 0; i < numofBLK; i++) {
+          $("#BLK" + i).remove();
+        }
+        for(var i = 0; i < numofLOGBLK; i++) {
+          $("#LOG_BLK" + i).remove();
+        }
+        $("#OPERATION").remove();
+        OPERATION_CNT -= 1;
+        // stat_save_arr[stat_idx].step_idx = stat_save_arr[stat_idx].step_idx - 1;
+        var step_info = stat_save_arr[stat_idx].step_arr[0]; // state of right before
+        stat_idx -= 1;
+        step_info.BMT_elem.appendTo("#body");
+        step_info.PMT_elem.appendTo("#body");
+        step_info.OPERATION_elem.appendTo("#body");
+        if(step_info.file_opened == 1) {
+          $("#Operate").css("display", "block");
+          console.log("cancle_func OPERATION_ROWS: " + step_info.OPERATION_ROWS);
+          OPERATION_ROWS = step_info.OPERATION_ROWS;
+        } else {
+          $("#Operate").css("display", "none");
+        }
+        for(var i = 0; i < numofBLK; i++)
+          step_info.BLK_elem_arr[i].appendTo("#body");
+        for(var i = 0; i < numofLOGBLK; i++)
+          step_info.LOG_BLK_elem_arr[i].appendTo("#body");
+      }
+
+      function step_back_func() {
+        if(stat_save_arr[stat_idx].step_idx == 0) {
+          alert("initial state!");
+          return;
+        }
+        $("#BMT").remove();
+        $("#PMT").remove();
+        $("#OPERATION").remove();
+        for(var i = 0; i < numofBLK; i++) {
+          $("#BLK" + i).remove();
+        }
+        for(var i = 0; i < numofLOGBLK; i++) {
+          $("#LOG_BLK" + i).remove();
+        }
+        stat_save_arr[stat_idx].step_idx = stat_save_arr[stat_idx].step_idx - 1;
+        var step_info = stat_save_arr[stat_idx].step_arr[stat_save_arr[stat_idx].step_idx];
+        step_info.BMT_elem.appendTo("#body");
+        step_info.PMT_elem.appendTo("#body");
+        step_info.OPERATION_elem.appendTo("#body");
+        for(var i = 0; i < numofBLK; i++)
+          step_info.BLK_elem_arr[i].appendTo("#body");
+        for(var i = 0; i < numofLOGBLK; i++)
+          step_info.LOG_BLK_elem_arr[i].appendTo("#body");
+      }
+      function step_foward_func() {
+        if(stat_save_arr[stat_idx].step_idx == stat_save_arr[stat_idx].step_len) {
+          alert("last state!")
+          return;
+        }
+        animation_func();
+      }
+
+      function save_step_stat(step_info) {
+        step_info.BMT_elem = $("#BMT").clone();
+        step_info.PMT_elem = $("#PMT").clone();
+        step_info.OPERATION_elem = $("#OPERATION").clone();
+        step_info.BLK_elem_arr = new Array();
+        step_info.LOG_BLK_elem_arr = new Array();
+        for(var i = 0; i < numofBLK; i++) {
+          step_info.BLK_elem_arr[i] = $("#BLK" + i).clone();
+        }
+        for(var i = 0; i < numofLOGBLK; i++) {
+          step_info.LOG_BLK_elem_arr[i] = $("#LOG_BLK" + i).clone();
+        }
+      }
+
+      function alloc_step() {
+        var now_stat = stat_save_arr[stat_idx];
+        now_stat.step_arr[now_stat.step_len] = new Object();
+        now_stat.step_len++;
+        return now_stat.step_arr[now_stat.step_len - 1];
+      }
+
+      function animation_func() {
+        if(stat_save_arr[stat_idx].step_idx >= stat_save_arr[stat_idx].step_len) {
+          clearInterval(timeld);
+          timeld = null;
+          $("#play_pause").val('play').attr('disabled', true);
+          $("#Write").attr('disabled', false);
+          $("#Operate").attr('disabled', false);
+          $("#Read").attr('disabled', false);
+          $("#delay_up").attr('disabled', false);
+          $("#delay_down").attr('disabled', false);
+          $("#step_back").attr('disabled', false);
+          $("#step_foward").attr('disabled', false);
+          $("#cancle").attr('disabled', false);
+          return;
+        }
+
+        var step_info = stat_save_arr[stat_idx].step_arr[stat_save_arr[stat_idx].step_idx];
+        stat_save_arr[stat_idx].step_idx++;
+
+        console.log("motion: " + step_info.motion);
+        $('body').append('<span id = "info">' + step_info.info + '</span>');
+        setTimeout(function() {
+          $("#info").remove();
+        }, delay);
+        if(step_info.motion == 'replace') {
+          save_step_stat(step_info);
+          BLK_get_PPN_data(step_info.free_blk_ppn).addClass('focus');
+          BLK_get_DATA(step_info.free_blk_ppn).addClass('focus');
+          BLK_get_LPN(step_info.free_blk_ppn).addClass('focus');
+          BLK_get_STATE(step_info.free_blk_ppn).addClass('focus');
+          setTimeout(function() {
+            BLK_get_PPN_data(step_info.free_blk_ppn).removeClass('focus').addClass('valid');
+            BLK_get_DATA(step_info.free_blk_ppn).removeClass('focus').addClass('valid').html(step_info.data);
+            BLK_get_LPN(step_info.free_blk_ppn).removeClass('focus').addClass('valid').html(step_info.lpn);
+            BLK_get_STATE(step_info.free_blk_ppn).removeClass('focus').addClass('valid').html('valid');
+          }, delay / 2);
+        }
+        if(step_info.motion == 'find in data blk') {
+          save_step_stat(step_info);
+          BLK_get_PPN_data(step_info.free_blk_ppn).addClass('focus');
+          BLK_get_DATA(step_info.free_blk_ppn).addClass('focus');
+          BLK_get_LPN(step_info.free_blk_ppn).addClass('focus');
+          BLK_get_STATE(step_info.free_blk_ppn).addClass('focus');
+
+          BLK_get_PPN_data(step_info.data_page).addClass('focus').removeClass('valid');
+          BLK_get_DATA(step_info.data_page).addClass('focus').removeClass('valid');
+          BLK_get_LPN(step_info.data_page).addClass('focus').removeClass('valid');
+          BLK_get_STATE(step_info.data_page).addClass('focus').removeClass('valid');
+          setTimeout(function() {
+            BLK_get_PPN_data(step_info.free_blk_ppn).removeClass('focus').addClass('valid');
+            BLK_get_DATA(step_info.free_blk_ppn).removeClass('focus').addClass('valid').html(step_info.data);
+            BLK_get_LPN(step_info.free_blk_ppn).removeClass('focus').addClass('valid').html(step_info.lpn);
+            BLK_get_STATE(step_info.free_blk_ppn).removeClass('focus').addClass('valid').html('valid');
+
+            BLK_get_PPN_data(step_info.data_page).removeClass('focus');
+            BLK_get_DATA(step_info.data_page).removeClass('focus').html('');
+            BLK_get_LPN(step_info.data_page).removeClass('focus').html('');
+            BLK_get_STATE(step_info.data_page).removeClass('focus').html('empty');
+          }, delay / 2);
+        }
+        if(step_info.motion == 'find in log blk') {
+          save_step_stat(step_info);
+          BLK_get_PPN_data(step_info.free_blk_ppn).addClass('focus');
+          BLK_get_DATA(step_info.free_blk_ppn).addClass('focus');
+          BLK_get_LPN(step_info.free_blk_ppn).addClass('focus');
+          BLK_get_STATE(step_info.free_blk_ppn).addClass('focus');
+
+          LOG_BLK_get_PPN_data(step_info.log_page).addClass('focus').removeClass('valid');
+          LOG_BLK_get_DATA(step_info.log_page).addClass('focus').removeClass('valid');
+          LOG_BLK_get_LPN(step_info.log_page).addClass('focus').removeClass('valid');
+          LOG_BLK_get_STATE(step_info.log_page).addClass('focus').removeClass('valid');
+          setTimeout(function() {
+            BLK_get_PPN_data(step_info.free_blk_ppn).removeClass('focus').addClass('valid');
+            BLK_get_DATA(step_info.free_blk_ppn).removeClass('focus').addClass('valid').html(step_info.data);
+            BLK_get_LPN(step_info.free_blk_ppn).removeClass('focus').addClass('valid').html(step_info.lpn);
+            BLK_get_STATE(step_info.free_blk_ppn).removeClass('focus').addClass('valid').html('valid');
+
+            LOG_BLK_get_PPN_data(step_info.log_page).removeClass('focus');
+            LOG_BLK_get_DATA(step_info.log_page).removeClass('focus').html('');
+            LOG_BLK_get_LPN(step_info.log_page).removeClass('focus').html('');
+            LOG_BLK_get_STATE(step_info.log_page).removeClass('focus').html('empty');
+          }, delay / 2);
+        }
+        if(step_info.motion == 'none') {
+          save_step_stat(step_info);
+          BLK_get_PPN_data(step_info.free_blk_ppn).addClass('focus');
+          BLK_get_DATA(step_info.free_blk_ppn).addClass('focus');
+          BLK_get_LPN(step_info.free_blk_ppn).addClass('focus');
+          BLK_get_STATE(step_info.free_blk_ppn).addClass('focus');
+          setTimeout(function() {
+            BLK_get_PPN_data(step_info.free_blk_ppn).removeClass('focus').addClass('invalid');
+            BLK_get_DATA(step_info.free_blk_ppn).removeClass('focus').addClass('invalid').html('none');
+            BLK_get_LPN(step_info.free_blk_ppn).removeClass('focus').addClass('invalid').html(step_info.matching_lpn);
+            BLK_get_STATE(step_info.free_blk_ppn).removeClass('focus').addClass('invalid').html('invalid');
+          }, delay / 2);
+        }
+        if(step_info.motion == 'make empty blk') {
+          save_step_stat(step_info);
+          console.log("matching_log_blk: " + step_info.matching_log_blk);
+          console.log("pbn: " + step_info.pbn);
+          for(var i = 0; i < PAGES_PER_BLK; i++) {
+            var log_page = step_info.matching_log_blk * PAGES_PER_BLK + i;
+            var data_page = step_info.pbn * PAGES_PER_BLK + i;
+            BLK_get_PPN_data(data_page).removeClass('invalid').removeClass('valid').addClass('focus');
+            BLK_get_STATE(data_page).removeClass('invalid').removeClass('valid').addClass('focus');
+            BLK_get_DATA(data_page).removeClass('invalid').removeClass('valid').addClass('focus');
+            BLK_get_LPN(data_page).removeClass('invalid').removeClass('valid').addClass('focus');
+
+            LOG_BLK_get_PPN_data(log_page).removeClass('invalid').removeClass('valid').addClass('focus');
+            LOG_BLK_get_STATE(log_page).removeClass('invalid').removeClass('valid').addClass('focus');
+            LOG_BLK_get_DATA(log_page).removeClass('invalid').removeClass('valid').addClass('focus');
+            LOG_BLK_get_LPN(log_page).removeClass('invalid').removeClass('valid').addClass('focus');
+          }
+          setTimeout(function() {
+            for(var i = 0; i < PAGES_PER_BLK; i++) {
+              var log_page = step_info.matching_log_blk * PAGES_PER_BLK + i;
+              var data_page = step_info.pbn * PAGES_PER_BLK + i;
+
+
+              BLK_get_PPN_data(data_page).removeClass('focus');
+              BLK_get_STATE(data_page).removeClass('focus').html('empty');
+              BLK_get_DATA(data_page).removeClass('focus').html('');
+              BLK_get_LPN(data_page).removeClass('focus').html('');
+
+              LOG_BLK_get_PPN_data(log_page).removeClass('focus');
+              LOG_BLK_get_STATE(log_page).removeClass('focus').html('empty');
+              LOG_BLK_get_DATA(log_page).removeClass('focus').html('');
+              LOG_BLK_get_LPN(log_page).removeClass('focus').html('');
+            }
+          }, delay / 2);
+        }
+        if(step_info.motion == 'change pbn') {
+          save_step_stat(step_info);
+          BMT_get_PBN(step_info.lbn).addClass('focus');
+          setTimeout(function() {
+            BMT_get_PBN(step_info.lbn).removeClass('focus').html(step_info.pbn);
+          }, delay / 2);
+        } else if(step_info.motion == 'make invalid') {
+          save_step_stat(step_info);
+          BLK_get_PPN_data(step_info.page_num).removeClass('valid').removeClass('invalid').addClass('focus');
+          BLK_get_STATE(step_info.page_num).removeClass('valid').removeClass('invalid').addClass('focus');
+          BLK_get_LPN(step_info.page_num).removeClass('valid').removeClass('invalid').addClass('focus');
+          BLK_get_DATA(step_info.page_num).removeClass('valid').removeClass('invalid').addClass('focus');
+          setTimeout(function() {
+            BLK_get_PPN_data(step_info.page_num).removeClass('focus').addClass('invalid');
+            BLK_get_STATE(step_info.page_num).removeClass('focus').addClass('invalid').html('invalid');
+            BLK_get_LPN(step_info.page_num).removeClass('focus').addClass('invalid').html(step_info.lpn);
+            BLK_get_DATA(step_info.page_num).removeClass('focus').addClass('invalid').html('none');
+          }, delay / 2);
+        } else if(step_info.motion == 'make empty') {
+          save_step_stat(step_info);
+          BLK_get_PPN_data(step_info.page_num).removeClass('invalid').removeClass('valid').addClass('focus');
+          BLK_get_STATE(step_info.page_num).removeClass('invalid').removeClass('valid').addClass('focus');
+          BLK_get_DATA(step_info.page_num).removeClass('invalid').removeClass('valid').addClass('focus');
+          BLK_get_LPN(step_info.page_num).removeClass('invalid').removeClass('valid').addClass('focus');
+          setTimeout(function() {
+            BLK_get_PPN_data(step_info.page_num).removeClass('focus');
+            BLK_get_STATE(step_info.page_num).removeClass('focus').html('empty');
+            BLK_get_DATA(step_info.page_num).removeClass('focus').html('');
+            BLK_get_LPN(step_info.page_num).removeClass('focus').html('');
+          }, delay / 2);
+        } else if(step_info.motion == 'write page') {
+          save_step_stat(step_info);
+          BLK_get_PPN_data(step_info.page_num).addClass('focus').removeClass('valid');
+          BLK_get_STATE(step_info.page_num).addClass('focus').removeClass('valid');
+          BLK_get_DATA(step_info.page_num).addClass('focus').removeClass('valid');
+          BLK_get_LPN(step_info.page_num).addClass('focus').removeClass('valid');
+          setTimeout(function() {
+            BLK_get_PPN_data(step_info.page_num).removeClass('focus').addClass('valid');
+            BLK_get_STATE(step_info.page_num).removeClass('focus').addClass('valid').html('valid');
+            BLK_get_DATA(step_info.page_num).removeClass('focus').addClass('valid').html(step_info.data);
+            BLK_get_LPN(step_info.page_num).removeClass('focus').addClass('valid').html(step_info.lpn);
+          }, delay / 2);
+        } else if(step_info.motion == 'log write page') {
+          save_step_stat(step_info);
+          console.log("HI2~");
+          LOG_BLK_get_PPN_data(step_info.page_num).addClass('focus').removeClass('valid');
+          LOG_BLK_get_STATE(step_info.page_num).addClass('focus').removeClass('valid');
+          LOG_BLK_get_DATA(step_info.page_num).addClass('focus').removeClass('valid');
+          LOG_BLK_get_LPN(step_info.page_num).addClass('focus').removeClass('valid');
+          if(step_info.is_invalided == true) {
+            BLK_get_PPN_data(step_info.invalid_page).removeClass('valid').addClass('focus');
+            BLK_get_STATE(step_info.invalid_page).removeClass('valid').addClass('focus');
+            BLK_get_LPN(step_info.invalid_page).removeClass('valid').addClass('focus');
+            BLK_get_DATA(step_info.invalid_page).removeClass('valid').addClass('focus');
+          }
+          setTimeout(function() {
+            LOG_BLK_get_PPN_data(step_info.page_num).removeClass('focus').addClass('valid');
+            LOG_BLK_get_STATE(step_info.page_num).removeClass('focus').addClass('valid').html('valid');
+            LOG_BLK_get_DATA(step_info.page_num).removeClass('focus').addClass('valid').html(step_info.data);
+            LOG_BLK_get_LPN(step_info.page_num).removeClass('focus').addClass('valid').html(step_info.lpn);
+            if(step_info.is_invalided == true) {
+              BLK_get_PPN_data(step_info.invalid_page).removeClass('focus').addClass('invalid');
+              BLK_get_STATE(step_info.invalid_page).removeClass('focus').addClass('invalid').html('invalid');
+              BLK_get_LPN(step_info.invalid_page).removeClass('focus').addClass('invalid').html(step_info.lpn);
+              BLK_get_DATA(step_info.invalid_page).removeClass('focus').addClass('invalid').html(step_info.origin_data);
+            }
+          }, delay / 2);
+        } else if(step_info.motion == 'replace page') {
+          save_step_stat(step_info);
+          BLK_get_PPN_data(step_info.page_num).addClass('focus');
+          BLK_get_STATE(step_info.page_num).addClass('focus');
+          BLK_get_DATA(step_info.page_num).addClass('focus');
+          BLK_get_LPN(step_info.page_num).addClass('focus');
+          setTimeout(function() {
+            BLK_get_PPN_data(step_info.page_num).removeClass('focus').addClass('valid');
+            BLK_get_STATE(step_info.page_num).removeClass('focus').addClass('valid').html('valid');
+            BLK_get_DATA(step_info.page_num).removeClass('focus').addClass('valid').html(step_info.data);
+            BLK_get_LPN(step_info.page_num).removeClass('focus').addClass('valid').html(step_info.lpn);
+          }, delay / 2);
+        }
+        else if(step_info.motion == 'operation start') {
+          step_info.file_opened = true;
+          step_info.OPERATION_ROWS = OPERATION_ROWS;
+          save_step_stat(step_info);
+          OPERATION_get_NUM(0).addClass('focus');
+          OPERATION_get_OPERATION(0).addClass('focus');
+          OPERATION_get_LPN(0).addClass('focus');
+          OPERATION_get_DATA(0).addClass('focus');
+        } else if(step_info.motion == 'operation finish') {
+          step_info.file_opened = false;
+          step_info.OPERATION_ROWS = OPERATION_ROWS;
+          save_step_stat(step_info);
+          $("#OPERATION").addClass('focus');
+          // for(var i = 1; i < OPERATION_ROWS; i++) {
+          //   OPERATION_get_OPERATION(i).addClass('focus');
+          //   OPERATION_get_LPN(i).addClass('focus');
+          //   OPERATION_get_DATA(i).addClass('focus');
+          // }
+          setTimeout(function() {
+            $("#OPERATION").removeClass('focus');
+            OPERATION_get_NUM(0).removeClass('focus');
+            OPERATION_get_OPERATION(0).removeClass('focus');
+            OPERATION_get_LPN(0).removeClass('focus');
+            OPERATION_get_DATA(0).removeClass('focus');
+            for(var i = 0; i < OPERATION_ROWS; i++) {
+              // OPERATION_get_OPERATION(i).removeClass('focus');
+              // OPERATION_get_LPN(i).removeClass('focus');
+              // OPERATION_get_DATA(i).removeClass('focus');
+              if(i != 0) {
+                var op = OPERATION_get_OPERATION(i).html();
+                var lpn = OPERATION_get_LPN(i).html();
+                var data = OPERATION_get_DATA(i).html();
+                OPERATION_get_OPERATION(i - 1).html(op);
+                OPERATION_get_LPN(i - 1).html(lpn);
+                OPERATION_get_DATA(i - 1).html(data);
+              }
+              if(i == OPERATION_ROWS - 1) {
+                OPERATION_get_OPERATION(i).html('');
+                OPERATION_get_LPN(i).html('');
+                OPERATION_get_DATA(i).html('');
+              }
+            }
+          }, delay / 2);
+          OPERATION_CNT += 1;
+          if(OPERATION_CNT == OPERATION_ROWS) {
+            $("#OPERATION").css("display", "none");
+            $("#Operate").css("display", "none");
+          }
+        } else if(step_info.motion == 'log make invalid') {
+          console.log("HI!~~~");
+          save_step_stat(step_info);
+          LOG_BLK_get_PPN_data(step_info.ppn).addClass('focus').removeClass('valid');
+          LOG_BLK_get_DATA(step_info.ppn).addClass('focus').removeClass('valid');
+          LOG_BLK_get_LPN(step_info.ppn).addClass('focus').removeClass('valid');
+          LOG_BLK_get_STATE(step_info.ppn).addClass('focus').removeClass('valid');
+          setTimeout(function() {
+            LOG_BLK_get_PPN_data(step_info.ppn).removeClass('focus').addClass('invalid');
+            LOG_BLK_get_DATA(step_info.ppn).removeClass('focus').addClass('invalid');
+            LOG_BLK_get_LPN(step_info.ppn).removeClass('focus').addClass('invalid');
+            LOG_BLK_get_STATE(step_info.ppn).removeClass('focus').addClass('invalid').html('invalid');
+          }, delay / 2);
+        }
+        else if(step_info.motion == 'switch merge') {
+          // step_info.motion = 'switch merge';
+          // step_info.log_blk = matching_log_blk;
+          // step_info.data_blk = pbn;
+          save_step_stat(step_info);
+          var now_stat = step_info.now_stat;
+          // $("#LOG_BLK" + step_info.log_blk).addClass('focus').removeClass('invalid').removeClass('valid');
+          // $("#BLK" + step_info.data_blk).addClass('focus').removeClass('invalid').removeClass('valid');
+          for(var i = 0; i < PAGES_PER_BLK; i++) {
+            var log_page = step_info.log_blk * PAGES_PER_BLK + i;
+            var data_page = step_info.data_blk * PAGES_PER_BLK + i;
+            BLK_get_PPN_data(data_page).removeClass('invalid').removeClass('valid').addClass('focus');
+            BLK_get_STATE(data_page).removeClass('invalid').removeClass('valid').addClass('focus');
+            BLK_get_DATA(data_page).removeClass('invalid').removeClass('valid').addClass('focus');
+            BLK_get_LPN(data_page).removeClass('invalid').removeClass('valid').addClass('focus');
+
+            LOG_BLK_get_PPN_data(log_page).removeClass('invalid').removeClass('valid').addClass('focus');
+            LOG_BLK_get_STATE(log_page).removeClass('invalid').removeClass('valid').addClass('focus');
+            LOG_BLK_get_DATA(log_page).removeClass('invalid').removeClass('valid').addClass('focus');
+            LOG_BLK_get_LPN(log_page).removeClass('invalid').removeClass('valid').addClass('focus');
+          }
+          setTimeout(function() {
+            // $("#LOG_BLK" + step_info.log_blk).removeClass('focus');
+            // $("#BLK" + step_info.data_blk).removeClass('focus');
+            for(var i = 0; i < PAGES_PER_BLK; i++) {
+              var log_page = step_info.log_blk * PAGES_PER_BLK + i;
+              var data_page = step_info.data_blk * PAGES_PER_BLK + i;
+
+
+              BLK_get_PPN_data(data_page).removeClass('focus');
+              BLK_get_STATE(data_page).removeClass('focus');
+              BLK_get_DATA(data_page).removeClass('focus');
+              BLK_get_LPN(data_page).removeClass('focus');
+
+              LOG_BLK_get_PPN_data(log_page).removeClass('focus');
+              LOG_BLK_get_STATE(log_page).removeClass('focus');
+              LOG_BLK_get_DATA(log_page).removeClass('focus');
+              LOG_BLK_get_LPN(log_page).removeClass('focus');
+
+              BLK_get_DATA(data_page).html(step_info.data[i]);
+              BLK_get_LPN(data_page).html(step_info.spare[i]);
+              if(step_info.spare[i] == -1) {
+                var lpn = step_info.lbn * PAGES_PER_BLK + i;
+                BLK_get_DATA(data_page).html('');
+                BLK_get_LPN(data_page).html('');
+              }
+              BLK_get_STATE(data_page).html(step_info.stat[i]);
+              if(step_info.stat[i] == 'valid') {
+                BLK_get_PPN_data(data_page).addClass('valid');
+                BLK_get_DATA(data_page).addClass('valid');
+                BLK_get_LPN(data_page).addClass('valid');
+                BLK_get_STATE(data_page).addClass('valid');
+              }
+              if(step_info.stat[i] == 'invalid') {
+                BLK_get_PPN_data(data_page).addClass('invalid');
+                BLK_get_DATA(data_page).addClass('invalid');
+                BLK_get_LPN(data_page).addClass('invalid');
+                BLK_get_STATE(data_page).addClass('invalid');
+              }
+
+              LOG_BLK_get_DATA(log_page).html('');
+              LOG_BLK_get_LPN(log_page).html('');
+              LOG_BLK_get_STATE(log_page).html('empy');
+            }
+          }, delay / 2);
+        } else if(step_info.motion == 'partial move page') {
+          // var step_info = alloc_step();
+          // step_info.motion = 'partial move page';
+          // step_info.data = now_stat.log_page_data[log_blk_page];
+          // step_info.spare = now_stat.log_page_spare[log_blk_page];
+          // step_info.stat = now_stat.log_page_stat[log_blk_page];
+          // step_info.data_page = data_blk_page;
+          // step_info.log_page = log_blk_page;
+          save_step_stat(step_info);
+          var log_page = step_info.log_page;
+          var data_page = step_info.data_page;
+          BLK_get_PPN_data(data_page).removeClass('invalid').removeClass('valid').addClass('focus');
+          BLK_get_STATE(data_page).removeClass('invalid').removeClass('valid').addClass('focus');
+          BLK_get_DATA(data_page).removeClass('invalid').removeClass('valid').addClass('focus');
+          BLK_get_LPN(data_page).removeClass('invalid').removeClass('valid').addClass('focus');
+
+          LOG_BLK_get_PPN_data(log_page).removeClass('invalid').removeClass('valid').addClass('focus');
+          LOG_BLK_get_STATE(log_page).removeClass('invalid').removeClass('valid').addClass('focus');
+          LOG_BLK_get_DATA(log_page).removeClass('invalid').removeClass('valid').addClass('focus');
+          LOG_BLK_get_LPN(log_page).removeClass('invalid').removeClass('valid').addClass('focus');
+
+          setTimeout(function() {
+              BLK_get_PPN_data(data_page).removeClass('focus');
+              BLK_get_STATE(data_page).removeClass('focus');
+              BLK_get_DATA(data_page).removeClass('focus');
+              BLK_get_LPN(data_page).removeClass('focus');
+
+              LOG_BLK_get_PPN_data(log_page).removeClass('focus');
+              LOG_BLK_get_STATE(log_page).removeClass('focus');
+              LOG_BLK_get_DATA(log_page).removeClass('focus');
+              LOG_BLK_get_LPN(log_page).removeClass('focus');
+
+              LOG_BLK_get_DATA(log_page).html(step_info.data);
+              LOG_BLK_get_LPN(log_page).html(step_info.spare);
+              if(step_info.spare == -1) {
+                var lpn = step_info.lbn * PAGES_PER_BLK + i;
+                LOG_BLK_get_DATA(log_page).html('');
+                LOG_BLK_get_LPN(log_page).html('');
+              }
+              LOG_BLK_get_STATE(log_page).html(step_info.stat);
+              if(step_info.stat == 'valid') {
+                LOG_BLK_get_PPN_data(log_page).addClass('valid');
+                LOG_BLK_get_DATA(log_page).addClass('valid');
+                LOG_BLK_get_LPN(log_page).addClass('valid');
+                LOG_BLK_get_STATE(log_page).addClass('valid');
+              }
+              if(step_info.stat == 'invalid') {
+                LOG_BLK_get_PPN_data(log_page).addClass('invalid');
+                LOG_BLK_get_DATA(log_page).addClass('invalid');
+                LOG_BLK_get_LPN(log_page).addClass('invalid');
+                LOG_BLK_get_STATE(log_page).addClass('invalid');
+              }
+              BLK_get_DATA(data_page).html('');
+              BLK_get_LPN(data_page).html('');
+              BLK_get_STATE(data_page).html('empy');
+          }, delay / 2);
+        } else if(step_info.motion = 'delete page') {
+          save_step_stat(step_info);
+          var data_page = step_info.data_page;
+          BLK_get_PPN_data(data_page).removeClass('invalid').removeClass('valid').addClass('focus');
+          BLK_get_STATE(data_page).removeClass('invalid').removeClass('valid').addClass('focus');
+          BLK_get_DATA(data_page).removeClass('invalid').removeClass('valid').addClass('focus');
+          BLK_get_LPN(data_page).removeClass('invalid').removeClass('valid').addClass('focus');
+
+          setTimeout(function() {
+              BLK_get_PPN_data(data_page).removeClass('focus');
+              BLK_get_STATE(data_page).removeClass('focus');
+              BLK_get_DATA(data_page).removeClass('focus');
+              BLK_get_LPN(data_page).removeClass('focus');
+
+              BLK_get_DATA(data_page).html('');
+              BLK_get_LPN(data_page).html('');
+              BLK_get_STATE(data_page).html('empy');
+          }, delay / 2);
+        } 
+        else {
+          console.log("No motion info!");
+        }
+      }
+
+// else if(step_info.motion = 'full page move') {
+// // console.log("full page move in!!!!");
+//           // save_step_stat(step_info);
+//           // console.log('type: ' + step_info.type);
+//           // console.log('free_blk_ppn: ' + step_info.free_blk_ppn);
+//           // if(step_info.type == 'replace') {
+//           //   BLK_get_PPN_data(step_info.free_blk_ppn).addClass('focus');
+//           //   BLK_get_DATA(step_info.free_blk_ppn).addClass('focus');
+//           //   BLK_get_LPN(step_info.free_blk_ppn).addClass('focus');
+//           //   BLK_get_STATE(step_info.free_blk_ppn).addClass('focus');
+//           //   setTimeout(function() {
+//           //     BLK_get_PPN_data(step_info.free_blk_ppn).removeClass('focus').addClass('valid');
+//           //     BLK_get_DATA(step_info.free_blk_ppn).removeClass('focus').addClass('valid').html(step_info.data);
+//           //     BLK_get_LPN(step_info.free_blk_ppn).removeClass('focus').addClass('valid').html(step_info.lpn);
+//           //     BLK_get_STATE(step_info.free_blk_ppn).removeClass('focus').addClass('valid').html('valid');
+//           //   }, delay / 2);
+//           // }
+//           // if(step_info.type == 'find in data blk') {
+//           //   BLK_get_PPN_data(step_info.free_blk_ppn).addClass('focus');
+//           //   BLK_get_DATA(step_info.free_blk_ppn).addClass('focus');
+//           //   BLK_get_LPN(step_info.free_blk_ppn).addClass('focus');
+//           //   BLK_get_STATE(step_info.free_blk_ppn).addClass('focus');
+
+//           //   BLK_get_PPN_data(step_info.data_page).addClass('focus').removeClass('valid');
+//           //   BLK_get_DATA(step_info.data_page).addClass('focus').removeClass('valid');
+//           //   BLK_get_LPN(step_info.data_page).addClass('focus').removeClass('valid');
+//           //   BLK_get_STATE(step_info.data_page).addClass('focus').removeClass('valid');
+//           //   setTimeout(function() {
+//           //     BLK_get_PPN_data(step_info.free_blk_ppn).removeClass('focus').addClass('valid');
+//           //     BLK_get_DATA(step_info.free_blk_ppn).removeClass('focus').addClass('valid').html(step_info.data);
+//           //     BLK_get_LPN(step_info.free_blk_ppn).removeClass('focus').addClass('valid').html(step_info.lpn);
+//           //     BLK_get_STATE(step_info.free_blk_ppn).removeClass('focus').addClass('valid').html('valid');
+
+//           //     BLK_get_PPN_data(step_info.data_page).removeClass('focus');
+//           //     BLK_get_DATA(step_info.data_page).removeClass('focus').html('');
+//           //     BLK_get_LPN(step_info.data_page).removeClass('focus').html('');
+//           //     BLK_get_STATE(step_info.data_page).removeClass('focus').html('empty');
+//           //   }, delay / 2);
+//           // }
+//           // if(step_info.type == 'find in log blk') {
+//           //   BLK_get_PPN_data(step_info.free_blk_ppn).addClass('focus');
+//           //   BLK_get_DATA(step_info.free_blk_ppn).addClass('focus');
+//           //   BLK_get_LPN(step_info.free_blk_ppn).addClass('focus');
+//           //   BLK_get_STATE(step_info.free_blk_ppn).addClass('focus');
+
+//           //   LOG_BLK_get_PPN_data(step_info.log_page).addClass('focus').removeClass('valid');
+//           //   LOG_BLK_get_DATA(step_info.log_page).addClass('focus').removeClass('valid');
+//           //   LOG_BLK_get_LPN(step_info.log_page).addClass('focus').removeClass('valid');
+//           //   LOG_BLK_get_STATE(step_info.log_page).addClass('focus').removeClass('valid');
+//           //   setTimeout(function() {
+//           //     BLK_get_PPN_data(step_info.free_blk_ppn).removeClass('focus').addClass('valid');
+//           //     BLK_get_DATA(step_info.free_blk_ppn).removeClass('focus').addClass('valid').html(step_info.data);
+//           //     BLK_get_LPN(step_info.free_blk_ppn).removeClass('focus').addClass('valid').html(step_info.lpn);
+//           //     BLK_get_STATE(step_info.free_blk_ppn).removeClass('focus').addClass('valid').html('valid');
+
+//           //     LOG_BLK_get_PPN_data(step_info.log_page).removeClass('focus');
+//           //     LOG_BLK_get_DATA(step_info.log_page).removeClass('focus').html('');
+//           //     LOG_BLK_get_LPN(step_info.log_page).removeClass('focus').html('');
+//           //     LOG_BLK_get_STATE(step_info.log_page).removeClass('focus').html('empty');
+//           //   }, delay / 2);
+//           // }
+//           // if(step_info.type == 'none') {
+//           //   BLK_get_PPN_data(step_info.free_blk_ppn).addClass('focus');
+//           //   BLK_get_DATA(step_info.free_blk_ppn).addClass('focus');
+//           //   BLK_get_LPN(step_info.free_blk_ppn).addClass('focus');
+//           //   BLK_get_STATE(step_info.free_blk_ppn).addClass('focus');
+//           //   setTimeout(function() {
+//           //     BLK_get_PPN_data(step_info.free_blk_ppn).removeClass('focus').addClass('invalid');
+//           //     BLK_get_DATA(step_info.free_blk_ppn).removeClass('focus').addClass('invalid').html('none');
+//           //     BLK_get_LPN(step_info.free_blk_ppn).removeClass('focus').addClass('invalid').html(matching_lpn);
+//           //     BLK_get_STATE(step_info.free_blk_ppn).removeClass('focus').addClass('invalid').html('invalid');
+//           //   }, delay / 2);
+//           // }
+// }
+// else if(step_info.motion == 'make empty blk') {
+//           save_step_stat(step_info);
+//           console.log("matching_log_blk: " + step_info.matching_log_blk);
+//           console.log("pbn: " + step_info.pbn);
+//           for(var i = 0; i < PAGES_PER_BLK; i++) {
+//             var log_page = step_info.matching_log_blk * PAGES_PER_BLK + i;
+//             var data_page = step_info.pbn * PAGES_PER_BLK + i;
+//             BLK_get_PPN_data(data_page).removeClass('invalid').removeClass('valid').addClass('focus');
+//             BLK_get_STATE(data_page).removeClass('invalid').removeClass('valid').addClass('focus');
+//             BLK_get_DATA(data_page).removeClass('invalid').removeClass('valid').addClass('focus');
+//             BLK_get_LPN(data_page).removeClass('invalid').removeClass('valid').addClass('focus');
+
+//             LOG_BLK_get_PPN_data(log_page).removeClass('invalid').removeClass('valid').addClass('focus');
+//             LOG_BLK_get_STATE(log_page).removeClass('invalid').removeClass('valid').addClass('focus');
+//             LOG_BLK_get_DATA(log_page).removeClass('invalid').removeClass('valid').addClass('focus');
+//             LOG_BLK_get_LPN(log_page).removeClass('invalid').removeClass('valid').addClass('focus');
+//           }
+//           setTimeout(function() {
+//             for(var i = 0; i < PAGES_PER_BLK; i++) {
+//               var log_page = step_info.matching_log_blk * PAGES_PER_BLK + i;
+//               var data_page = step_info.pbn * PAGES_PER_BLK + i;
+
+
+//               BLK_get_PPN_data(data_page).removeClass('focus');
+//               BLK_get_STATE(data_page).removeClass('focus').html('empty');
+//               BLK_get_DATA(data_page).removeClass('focus').html('');
+//               BLK_get_LPN(data_page).removeClass('focus').html('');
+
+//               LOG_BLK_get_PPN_data(log_page).removeClass('focus');
+//               LOG_BLK_get_STATE(log_page).removeClass('focus').html('empty');
+//               LOG_BLK_get_DATA(log_page).removeClass('focus').html('');
+//               LOG_BLK_get_LPN(log_page).removeClass('focus').html('');
+//             }
+//           }, delay / 2);
+//         } 
+          
+      
+      //start from here
+      function add_stat() { //need to be modified
+        stat_idx++;
+        stat_save_arr[stat_idx] = new Object();
+        stat_save_arr[stat_idx].bmt = new Array();
+        stat_save_arr[stat_idx].page_stat = new Array();
+        stat_save_arr[stat_idx].page_data = new Array();
+        stat_save_arr[stat_idx].page_spare = new Array();
+        
+        stat_save_arr[stat_idx].free_blk_idx = BLKS_PER_BANK - 1;
+        if(stat_idx > 1) {
+          stat_save_arr[stat_idx].free_blk_idx = stat_save_arr[stat_idx - 1].free_blk_idx;
+        }
+
+        stat_save_arr[stat_idx].pmt = new Array();
+        stat_save_arr[stat_idx].log_page_stat = new Array();
+        stat_save_arr[stat_idx].log_page_data = new Array();
+        stat_save_arr[stat_idx].log_page_spare = new Array();
+
+        stat_save_arr[stat_idx].matching_log_blk = new Array();
+        stat_save_arr[stat_idx].free_log_blk_num = LOG_BLKS_PER_BANK;
+        if(stat_idx > 1) {
+          stat_save_arr[stat_idx].free_log_blk_num = stat_save_arr[stat_idx - 1].free_log_blk_num;
+        }
+
+        for(var i = 0; i < PAGES_PER_BANK; i++) {
+          stat_save_arr[stat_idx].bmt[i] = -1;
+          stat_save_arr[stat_idx].page_stat[i] = 'empty';
+          stat_save_arr[stat_idx].page_data[i] = -1;
+          stat_save_arr[stat_idx].page_spare[i] = -1;
+          stat_save_arr[stat_idx].matching_log_blk[i] = -1;
+        }
+
+        for(var i = 0; i < LOG_PAGES_PER_BANK; i++) {
+          stat_save_arr[stat_idx].pmt[i] = -1;
+          stat_save_arr[stat_idx].log_page_stat[i] = 'empty';
+          stat_save_arr[stat_idx].log_page_data[i] = -1;
+          stat_save_arr[stat_idx].log_page_spare[i] = -1;
+        }
+
+        stat_save_arr[stat_idx].step_len = 0;
+        stat_save_arr[stat_idx].step_arr = new Array();
+        stat_save_arr[stat_idx].step_idx = 0;
+      }
+
+      function copy_stat(des, src) {  //need to be modified
+        // if(stat_idx <= 1) return;
+        stat_save_arr[des].page_to_write = stat_save_arr[src].page_to_write;
+        stat_save_arr[des].free_blk_idx = stat_save_arr[src].free_blk_idx;
+        stat_save_arr[des].free_log_blk_num = stat_save_arr[src].free_log_blk_num;
+        for(var i = 0; i < PAGES_PER_BANK; i++) {
+          stat_save_arr[des].bmt[i] = stat_save_arr[src].bmt[i];
+          stat_save_arr[des].page_stat[i] = stat_save_arr[src].page_stat[i];
+          stat_save_arr[des].page_data[i] = stat_save_arr[src].page_data[i];
+          stat_save_arr[des].page_spare[i] = stat_save_arr[src].page_spare[i];
+          stat_save_arr[des].matching_log_blk[i] = stat_save_arr[src].matching_log_blk[i];
+        }
+        for(var i = 0; i < LOG_PAGES_PER_BANK; i++) {
+          stat_save_arr[des].pmt[i] = stat_save_arr[src].pmt[i];
+          stat_save_arr[des].log_page_stat[i] = stat_save_arr[src].log_page_stat[i];
+          stat_save_arr[des].log_page_data[i] = stat_save_arr[src].log_page_data[i];
+          stat_save_arr[des].log_page_spare[i] = stat_save_arr[src].log_page_spare[i];
+        }
+      }
+      for(var i = 0; i < LBNS; i++)
+        BMT_add_row();
+      for(var i = 0; i < LOG_LPNS; i++)
+        PMT_add_row();
+      for(var i = 0; i < PAGES_PER_BLK; i++)
+        BLK_add_row(0);
+      for(var i = 0; i < BLKS_PER_BANK - 1; i++)
+        BLK_increase();
+      for(var i = 0; i < PAGES_PER_BLK; i++)
+        LOG_BLK_add_row(0);
+      for(var i = 0; i < LOG_BLKS_PER_BANK - 1; i++)
+        LOG_BLK_increase();
+
+      function BMT_add_row() {
+        $("#BMT").append('<tr id = "BMT_row' + BMT_numofRAW +  '"><tr>');
+        for(var i = 0; i < 2; i++) {
+          if(i == 0)
+            $("#BMT_row"+BMT_numofRAW).append('<td style="border-left: 2px solid #CCC;">' + BMT_numofRAW + '</td>');
+          else
+            $("#BMT_row"+BMT_numofRAW).append('<td style="border-right: 2px solid #CCC;">none</td>');
+        }
+        $("#BMT_row" + BMT_numofRAW).css("border-bottom", "1px solid #CCC");
+        if(BMT_numofRAW == LPNS - 1) {
+          $("#BMT_row" + BMT_numofRAW).css("border-bottom", "2px solid #CCC").css("border-bottom-left-radius", "5px");
+        }
+        BMT_numofRAW++;
+      }
+      function PMT_add_row() {
+        $("#PMT").append('<tr id = "PMT_row' + PMT_numofRAW +  '"><tr>');
+        for(var i = 0; i < 2; i++) {
+          if(i == 0)
+            $("#PMT_row"+PMT_numofRAW).append('<td style="border-left: 2px solid #CCC;">' + (PMT_numofRAW + PAGES_PER_BLK * BLKS_PER_BANK) + '</td>');
+          else
+            $("#PMT_row"+PMT_numofRAW).append('<td style="border-right: 2px solid #CCC;">none</td>');
+        }
+        $("#PMT_row" + PMT_numofRAW).css("border-bottom", "1px solid #CCC");
+        if(PMT_numofRAW == LPNS - 1) {
+          $("#PMT_row" + PMT_numofRAW).css("border-bottom", "2px solid #CCC").css("border-bottom-left-radius", "5px");
+        }
+        PMT_numofRAW++;
+      }
+      function OPERATION_add_row() {
+        $("#OPERATION").append('<tr id = "OPERATION_row' + OPERATION_numofRAW +  '"><tr>');
+        for(var i = 0; i < 4; i++) {
+          if(i == 0)
+            $("#OPERATION_row"+OPERATION_numofRAW).append('<td style="border-left: 2px solid #CCC;">' + (OPERATION_numofRAW + 1) + '</td>');
+          else if(i == 1)
+            $("#OPERATION_row"+OPERATION_numofRAW).append('<td></td>');
+          else if(i == 3)
+            $("#OPERATION_row"+OPERATION_numofRAW).append('<td style="border-right: 2px solid #CCC;"></td>');
+          else
+            $("#OPERATION_row"+OPERATION_numofRAW).append('<td></td>');
+        }
+        if(OPERATION_numofRAW == OPERATION_ROWS - 1) 
+          $("#OPERATION_row"+OPERATION_numofRAW).css("border-bottom", "2px solid #CCC");
+        else
+          $("#OPERATION_row"+OPERATION_numofRAW).css("border-bottom", "1px solid #CCC"); 
+        OPERATION_numofRAW++;
+      }
+      function BLK_add_row(blk_idx) {
+        $("#BLK" + blk_idx).append('<tr id = "page_row' + numofPAGE +  '"><tr>');
+        for(var i = 0; i < 4; i++) {
+          if(i == 0) {
+            $("#page_row"+numofPAGE).append('<td style="border-left: 2px solid #CCC;">' + numofPAGE + '</td>');
+          }
+          else if (i == 3) {
+            $("#page_row"+numofPAGE).append('<td style="border-right: 2px solid #CCC;">empty</td>');
+          }
+          else {
+            $("#page_row"+numofPAGE).append('<td></td>');
+          }
+        }
+        $("#page_row"+numofPAGE).css("border-bottom", "1px solid #CCC");
+        if(numofPAGE == PAGES_PER_BLK - 1) {
+          $("#page_row"+numofPAGE).css("border-bottom", "2px solid #CCC");
+        }
+        numofPAGE++;
+      }
+      function BLK_increase() {
+        var origin = "#BLK" + (numofBLK - 1);
+        var temp = $(origin).clone();
+        
+        temp.appendTo("#body").offset({left: $(origin).offset().left + 260, top: $(origin).offset().top});
+        temp.attr("id", "BLK" + (numofBLK));
+        temp.attr("class", "BLOCK");
+
+        numofBLK++;
+        for(var i = 0; i < PAGES_PER_BLK; i++) {
+          BLK_set_PPN_data(numofPAGE, numofPAGE);
+          numofPAGE++;
+        }
+      }
+
+      function LOG_BLK_add_row(blk_idx) {
+        $("#LOG_BLK" + blk_idx).append('<tr id = "log_page_row' + numofLOGPAGE +  '"><tr>');
+        for(var i = 0; i < 4; i++) {
+          if(i == 0) {
+            $("#log_page_row"+numofLOGPAGE).append('<td style="border-left: 2px solid #CCC;">' + (numofLOGPAGE + (BLKS_PER_BANK * PAGES_PER_BLK)) + '</td>');
+          }
+          else if (i == 3) {
+            $("#log_page_row"+numofLOGPAGE).append('<td style="border-right: 2px solid #CCC;">empty</td>');
+          }
+          else {
+            $("#log_page_row"+numofLOGPAGE).append('<td></td>');
+          }
+        }
+        $("#log_page_row"+numofLOGPAGE).css("border-bottom", "1px solid #CCC");
+        if(numofLOGPAGE == PAGES_PER_BLK - 1) {
+          $("#log_page_row"+numofLOGPAGE).css("border-bottom", "2px solid #CCC");
+        }
+        numofLOGPAGE++;
+      }
+      function LOG_BLK_increase() {
+        var origin = "#LOG_BLK" + (numofLOGBLK - 1);
+        var temp = $(origin).clone();
+        
+        temp.appendTo("#body").offset({left: $(origin).offset().left + 260, top: $(origin).offset().top});
+        temp.attr("id", "LOG_BLK" + (numofLOGBLK));
+        temp.attr("class", "LOG_BLOCK");
+
+        numofLOGBLK++;
+        for(var i = 0; i < PAGES_PER_BLK; i++) {
+          LOG_BLK_set_PPN_data(numofLOGPAGE, numofLOGPAGE + (BLKS_PER_BANK * PAGES_PER_BLK));
+          numofLOGPAGE++;
+        }
+      }
+
+      function BLK_get_PPN_data(page_num) {
+        var blk_num = parseInt(page_num / PAGES_PER_BLK);
+        var page_offset = page_num % PAGES_PER_BLK;
+        return $('#BLK' + (blk_num) + ' tr:eq(' + (page_offset*2+1) + ')>td:eq('+ 0 +')');
+      }
+      function BLK_get_DATA(page_num) {
+        var blk_num = parseInt(page_num / PAGES_PER_BLK);
+        var page_offset = page_num % PAGES_PER_BLK;
+        return $('#BLK' + (blk_num) + ' tr:eq(' + (page_offset*2+1) + ')>td:eq('+ 1 +')');
+      }
+      function BLK_get_LPN(page_num) {
+        var blk_num = parseInt(page_num / PAGES_PER_BLK);
+        var page_offset = page_num % PAGES_PER_BLK;
+        return $('#BLK' + (blk_num) + ' tr:eq(' + (page_offset*2+1) + ')>td:eq('+ 2 +')');
+      }
+      function BLK_get_STATE(page_num) {
+        var blk_num = parseInt(page_num / PAGES_PER_BLK);
+        var page_offset = page_num % PAGES_PER_BLK;
+        return $('#BLK' + (blk_num) + ' tr:eq(' + (page_offset*2+1) + ')>td:eq('+ 3 +')');
+      }
+      function BLK_set_PPN_data(page_num, data) {
+        var blk_num = parseInt(page_num / PAGES_PER_BLK);
+        var page_offset = page_num % PAGES_PER_BLK;
+        $('#BLK' + (blk_num) + ' tr:eq(' + (page_offset*2+1) + ')>td:eq('+ 0 +')').html(data);
+      }
+      function LOG_BLK_get_PPN_data(page_num) {
+        var blk_num = parseInt(page_num / PAGES_PER_BLK);
+        var page_offset = page_num % PAGES_PER_BLK;
+        return $('#LOG_BLK' + (blk_num) + ' tr:eq(' + (page_offset*2+1) + ')>td:eq('+ 0 +')');
+      }
+      function LOG_BLK_get_DATA(page_num) {
+        var blk_num = parseInt(page_num / PAGES_PER_BLK);
+        var page_offset = page_num % PAGES_PER_BLK;
+        return $('#LOG_BLK' + (blk_num) + ' tr:eq(' + (page_offset*2+1) + ')>td:eq('+ 1 +')');
+      }
+      function LOG_BLK_get_LPN(page_num) {
+        var blk_num = parseInt(page_num / PAGES_PER_BLK);
+        var page_offset = page_num % PAGES_PER_BLK;
+        return $('#LOG_BLK' + (blk_num) + ' tr:eq(' + (page_offset*2+1) + ')>td:eq('+ 2 +')');
+      }
+      function LOG_BLK_get_STATE(page_num) {
+        var blk_num = parseInt(page_num / PAGES_PER_BLK);
+        var page_offset = page_num % PAGES_PER_BLK;
+        return $('#LOG_BLK' + (blk_num) + ' tr:eq(' + (page_offset*2+1) + ')>td:eq('+ 3 +')');
+      }
+      function LOG_BLK_set_PPN_data(page_num, data) {
+        var blk_num = parseInt(page_num / PAGES_PER_BLK);
+        var page_offset = page_num % PAGES_PER_BLK;
+        $('#LOG_BLK' + (blk_num) + ' tr:eq(' + (page_offset*2+1) + ')>td:eq('+ 0 +')').html(data);
+      }
+      function BMT_get_LBN(slot_idx) {
+        return $('#BMT tr:eq(' + (slot_idx*2+1) + ')>td:eq('+ 0 +')');
+      }
+      function BMT_get_PBN(slot_idx) {
+        return $('#BMT tr:eq(' + (slot_idx*2+1) + ')>td:eq('+ 1 +')');
+      }
+      function PMT_get_LPN(slot_idx) {
+        return $('#PMT tr:eq(' + (slot_idx*2+1) + ')>td:eq('+ 1 +')');
+      }
+      function PMT_get_PPN(slot_idx) {
+        return $('#PMT tr:eq(' + (slot_idx*2+1) + ')>td:eq('+ 0 +')');
+      }
+      function OPERATION_get_NUM(slot_idx) {
+        return $('#OPERATION tr:eq(' + (slot_idx*2+1) + ')>td:eq('+ 0 +')');
+      }
+      function OPERATION_get_OPERATION(slot_idx) {
+        return $('#OPERATION tr:eq(' + (slot_idx*2+1) + ')>td:eq('+ 1 +')');
+      }
+      function OPERATION_get_LPN(slot_idx) {
+        return $('#OPERATION tr:eq(' + (slot_idx*2+1) + ')>td:eq('+ 2 +')');
+      }
+      function OPERATION_get_DATA(slot_idx) {
+        return $('#OPERATION tr:eq(' + (slot_idx*2+1) + ')>td:eq('+ 3 +')');
+      }
+    </script>
+  </body>
+</html>

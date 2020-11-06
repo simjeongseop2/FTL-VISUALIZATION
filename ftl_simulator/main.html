@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<!--
+	Industrious by TEMPLATED
+	templated.co @templatedco
+	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+-->
+<html>
+	<head>
+		<title>FTL VISUALIZATION</title>
+		<link href="./images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<meta name="description" content="" />
+		<meta name="keywords" content="" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+
+	</head>
+	<body class="is-preload">
+
+		<!-- Header -->
+			<header id="header">
+				<a class="logo">Graduate Work</a>
+				<nav>
+					<a href="#menu">Menu</a>
+				</nav>
+			</header>
+
+		<!-- Nav -->
+			<nav id="menu">
+				<ul class="links">
+					<li><a href="main.html">Home</a></li>
+					<li><a href="sector_based_ftl.html">Sector Based FTL</a></li>
+					<li><a href="page_based_ftl.html">Page Based FTL</a></li>
+					<li><a href="block_based_ftl.html">Block Based FTL</a></li>
+					<li><a href="hybrid_mapping_ftl.html">Hybrid Mapping FTL</a></li>
+					<li><a href="demand_based_ftl.html">DFTL</a></li>
+				</ul>
+			</nav>
+
+		<!-- Heading -->
+			<div id="heading" >
+				<h1>FTL Visualization</h1>
+			</div>
+
+		<!-- Main -->
+			<section id="main" class="wrapper">
+				<div class="inner">
+					<div class="content">
+						<header>
+							<h2>FTL의 visualization</h2>
+						</header>
+						<p>해당 Web application은 FTL(Flash Translation Layer)의 동작 과정을 애니메이션 형식으로 보여줌으로써 해당 FTL에 대해 처음 배우는 학생들의 이해를 돕기 위한 목적으로 제작되었습니다.<br>FTL 알고리즘은 SECTOR Based FTL, PAGE Based FTL, BLOCK Based FTL, HYBRID MAPPING FTL, DFTL 이렇게 총 5가지로 구성되어있습니다.<br>또한 각 알고리즘 별 애니메이션 속도 조절, 부분 재생, 실행 취소, 파일 불러오기 등 이해를 돕기 위한 부수적인 기능들을 제공하고 있습니다.<br></p>
+						<hr />
+						<h3>File 작성 방법</h3>
+						<p>text File에 다음의 방식으로 Operation을 미리 적어 놓고, 그것을 불러와서 실행할 수 있습니다.<br>
+							Write Operation은 (write 'lpn' 'data') 순으로 적습니다. ex) write 1 2 (1번 lpn에 data 2를 write하는 operation 실행)<br>
+						Read Operation은 (read 'lpn') 순으로 적습니다. ex) read 1 (1번 lpn을 read하는 operation 실행)<br>
+						연속된 lpn 혹은 data는 '-'을 이용해 표현할 수 있습니다. ex) write 1-10 1-10 (1번 lpn부터 10번 lpn에 각각 1부터 10까지의 data를 write하는 operation 실행)<br>
+						같은 Operation에 대해서 여러 lpn 혹은 data를 한 줄에 표현할 수 있습니다. ex) read 1,3,5 (1번, 3번, 5번 lpn을 read하는 operation 실행)</p>
+					</div>
+				</div>
+			</section>
+
+		<!-- Footer -->
+			<footer id="footer">
+				<div class="inner">
+					<div class="content">
+						<h3>반도체 시스템 공학과 14학번 심정섭</h3>
+						<!-- <section>
+							<h3>Accumsan montes viverra</h3>
+							<p>Nunc lacinia ante nunc ac lobortis. Interdum adipiscing gravida odio porttitor sem non mi integer non faucibus ornare mi ut ante amet placerat aliquet. Volutpat eu sed ante lacinia sapien lorem accumsan varius montes viverra nibh in adipiscing. Lorem ipsum dolor vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing sed feugiat eu faucibus. Integer ac sed amet praesent. Nunc lacinia ante nunc ac gravida.</p>
+						</section> -->
+						<!-- <section>
+							<h4>Sem turpis amet semper</h4>
+							<ul class="alt">
+								<li><a href="#">Dolor pulvinar sed etiam.</a></li>
+								<li><a href="#">Etiam vel lorem sed amet.</a></li>
+								<li><a href="#">Felis enim feugiat viverra.</a></li>
+								<li><a href="#">Dolor pulvinar magna etiam.</a></li>
+							</ul>
+						</section>
+						<section>
+							<h4>Magna sed ipsum</h4>
+							<ul class="plain">
+								<li><a href="#"><i class="icon fa-twitter">&nbsp;</i>Twitter</a></li>
+								<li><a href="#"><i class="icon fa-facebook">&nbsp;</i>Facebook</a></li>
+								<li><a href="#"><i class="icon fa-instagram">&nbsp;</i>Instagram</a></li>
+								<li><a href="#"><i class="icon fa-github">&nbsp;</i>Github</a></li>
+							</ul>
+						</section> -->
+					</div>
+					<div class="copyright">
+						&copy; Untitled. Photos <a href="https://unsplash.co">Unsplash</a>, Video <a href="https://coverr.co">Coverr</a>.
+					</div>
+				</div>
+			</footer>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>

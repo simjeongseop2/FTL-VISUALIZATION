@@ -1,0 +1,1965 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <title>DFTL VISUALIZATION</title>
+  <link href="./images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+  <head>
+    <link rel="stylesheet" type="text/css" href="semantic UI/semantic/semantic.css">
+    <script
+      src="https://code.jquery.com/jquery-3.1.1.min.js"
+      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+      crossorigin="anonymous"></script>
+    <script src="semantic UI/semantic/semantic.js"></script>
+  </head>
+  <style>
+    table {
+        border-collapse: collapse;
+        text-align: center;
+        line-height: 1.5;
+        empty-cells: show | inherit;
+        font-size: 18px;
+    }
+    table th {
+      border-bottom:1px solid #CCC;
+      width: 50px;
+      height: : 7.5px
+      font-size: 16px;
+      color: #fff;
+      background: #4B89DC;
+    }
+    table td {
+      width: 26.25px;
+      height: : 7.5px
+      border-bottom: 1px solid #CCC;
+    }
+    body {
+      padding: 1rem;
+      /*background-image: linear-gradient(to top right, #93a5cf, #e4efe9);*/
+    }
+    h1 {
+      border-bottom: 1px solid;
+    }
+    #head {
+      width: 500px;
+      /* height: : 20px */
+      /* background-color :#79C755; */
+      /*color:#f5f5dc;*/
+      color: #FFFFFF;
+      font-size: 30px;
+      font-family: serif;
+      padding: 5px;
+      /* margin: 0px;
+      border: 0px; */
+    }
+    #CMT {
+      position: absolute;
+    	left : 200px;
+    	top : 160px;
+    }
+    #OPERATION {
+      position: absolute;
+      left : 1450px;
+      top : 160px;
+      display: none;
+    }
+    #Operate {
+      position: absolute;
+      left : 1320px;
+      top : 160px;
+      display: none;
+    }
+    #GTD {
+      position: absolute;
+      left : 700px;
+      top : 160px;
+    }    
+
+    #CMT_NAME {
+      position: absolute;
+      left: 110px;
+      top: 175px;
+      font-size: 20px;
+    }
+    #GTD_NAME {
+      position: absolute;
+      left: 610px;
+      top: 175px;
+      font-size: 20px;
+    }
+    #DATA_NAME {
+      position: absolute;
+      left: 70px;
+      top: 370px;
+      font-size: 20px;
+    }
+    #MAP_NAME {
+      position: absolute;
+      left: 70px;
+      top: 590px;
+      font-size: 20px;
+    }
+    #info {
+      position: absolute;
+      left: 550px;
+      top: 270px;
+      font-size: 30px;
+      /*color: #FFDC00;*/
+    }
+    .DATA_BLK {
+      position:absolute;
+    	left : 200px;
+    	top : 350px;
+    }
+    .MAP_BLK {
+      position: absolute;
+      left : 200px;
+      top : 570px;
+    }
+
+    .focus {
+      /* border:5px solid red; */
+      background: #F08080;
+    }
+    .invalid {
+      background: #a28089;
+    }
+    .valid {
+      background: #d0bdf4;
+    }
+  </style>
+  <body id="body">
+    <h1>DFTL VISUALIZATION</h1>
+    <div class="ui mini input focus placeholder">
+    <input type="text" id="LPN_input" placeholder="LPN" />
+    </div>
+    <div class="ui mini input focus">
+    <input type="text" id="DATA_input" placeholder="DATA" />
+    </div>
+    <input type="button" id="Write" class="ui primary button" value="Write" />
+    <div class="ui mini input focus placeholder">
+    <input type="text" id="LPN_input2" placeholder="LPN" />
+    </div>
+     <input type="button" id="Read" class="ui primary button" value="Read" />
+    <input type="button" id="play_pause" class="ui button" value="Play" />
+    <!-- <div class="ui floating dropdown labeled icon button">
+      <div class="text">Delay</div>
+      <i class="hourglass icon"></i>
+      <div class="menu">
+        <div class="item" id = "delay_up">Up</div>
+        <div class="item" id = "delay_down">Down</div>
+      </div>
+    </div> -->
+    <button class="ui icon button" id = "delay_up">
+      <i class="arrow up icon"></i>
+    </button>
+    <span>delay: </span>
+    <span id = "delay"></span>
+    <button class="ui icon button" id = "delay_down">
+      <i class="arrow down icon"></i>
+    </button>
+    <!-- <input type="button" id="delay_up" class="ui button" value="delay_up" />
+    <i class="angle up icon"></i>
+    <span id = "delay"></span>
+    <i class="angle down icon"></i>
+    <input type="button" id="delay_down" class="ui button" value="delay_down" /> -->
+
+    <button type="button" id="step_back" class="ui button"><i class="undo icon"></i>Step Back</button>
+    <button type="button" id="step_foward" class="ui button"><i class="redo icon"></i>Step Foward</button>
+
+    <button type="button" id="cancle" class="ui button"><i class="trash alternate icon"></i>cancel</button>
+    <span id = "Open_file">
+      <label for="file" class="ui button"><i class="file icon"></i> Open File</label> 
+      <input type="file" accept="text/plain" onchange="openFile(event)" id="file" style="display: none"/> 
+       <!-- <input type='file' accept='text/plain' onchange='openFile(event)' value="Open File"> -->
+    </span>
+    <div class="ui floating dropdown labeled icon button" id="Menu">
+      <div class="text">Menu</div>
+      <i class="bars icon"></i>
+      <div class="menu">
+        <div class="item">
+          <a href="./main.html">Home</a>
+        </div>
+        <div class="item">
+          <a href="./sector_based_ftl.html">Sector Based FTL</a>
+        </div>
+        <div class="item">
+          <a href="./page_based_ftl.html">Page Based FTL</a>
+        </div>
+        <div class="item">
+          <a href="./block_based_ftl.html">Block Based FTL</a>
+        </div>
+        <div class="item">
+          <a href="./hybrid_mapping_ftl.html">Hybrid Mapping FTL</a>
+        </div>
+      </div>
+    </div>
+    <div class="ui floating dropdown labeled icon button" id = "Setting">
+      <div class="text">Setting</div>
+      <!-- <i class="dropdown icon"></i> -->
+      <i class="cog icon"></i>
+      <div class="menu">
+        <div class="item">
+          <div class="item" id = "data_blk_inc">Data BLK <i class="arrow alternate circle up icon"></i></div>
+        </div>
+        <div class="item">
+          <div class="item" id = "data_blk_dec">Data BLK <i class="arrow alternate circle down icon"></i></div>
+        </div>
+        <div class="item">
+          <div class="item" id = "map_blk_inc">Map BLK <i class="arrow alternate circle up icon"></i></div>
+        </div>
+        <div class="item">
+          <div class="item" id = "map_blk_dec">Map BLK <i class="arrow alternate circle down icon"></i></div>
+        </div>
+        <div class="item">
+          <div class="item" id = "page_per_blk_inc">Pages per BLK <i class="arrow alternate circle up icon"></i></div>
+        </div>
+        <div class="item">
+          <div class="item" id = "page_per_blk_dec">Pages per BLK <i class="arrow alternate circle down icon"></i></div>
+        </div>
+        <div class="item">
+          <div class="item" id = "cmt_page_inc">CMT Slot <i class="arrow alternate circle up icon"></i></div>
+        </div>
+        <div class="item">
+          <div class="item" id = "cmt_page_dec">CMT Slot <i class="arrow alternate circle down icon"></i></div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <input type="button" id="Operate" class="ui primary button" value="Operate" />
+    </p>
+    <script>
+      function  find_char(str, chr) {
+        for(i = 0; i < str.length; i++)
+          if(str[i] == chr)
+            return true;
+        return false;
+      }
+      var openFile = function(event) {
+        var input = event.target;
+
+        var reader = new FileReader();
+        reader.onload = function(){
+          var text = reader.result;
+          // var node = document.getElementById('output');
+          // node.innerText = text;
+          var res = text.split(/\s+/);
+          for(var i = 0; i < res.length; i++)
+            console.log(res[i]);
+          // console.log(reader.result.substring(0, 200));
+          var temp_row = 0;
+          OPERATION_ROWS = 0;
+          var idx = 0;
+          var slot_idx = 0;
+          var hyphen_var;
+          var comma_var;
+          while(idx < res.length) {
+            if(res[idx] == 'read') {    
+              temp_row += 1;         
+              slot_idx += 1;
+            } else if(res[idx] == 'write') {
+              temp_row += 1;
+              slot_idx += 1;
+            }
+            idx += 1;
+          }
+          // for(var i = 0; i < temp_row; i++)
+          //   OPERATION_add_row();
+          $("#OPERATION").css("display", "block");
+          $("#Operate").css("display", "block");
+          idx = 0;
+          slot_idx = 0;
+          while(idx < res.length) {
+            if(res[idx] == 'read') {
+              idx += 1;
+              var lpn_isArray = false;
+              var lpn_var = res[idx];
+              if(find_char(lpn_var, '-') == true) {
+                lpn_isArray = true;
+                var lpn_temp = res[idx].split('-');
+                var lpn_length = Number(lpn_temp[1]) - Number(lpn_temp[0]);
+                console.log("lpn_temp[1]: " + lpn_temp[1]);
+                console.log("lpn_temp[0]: " + lpn_temp[0]);
+                lpn_var = Array();
+                for(var i = 0; i <= lpn_length; i++)
+                  lpn_var[i] = Number(lpn_temp[0]) + i;
+              } else if(find_char(lpn_var, ',') == true) {
+                lpn_isArray = true;
+                lpn_var = res[idx].split(',')
+              }
+
+              if(lpn_isArray) {
+                for(var i = 0; i < lpn_var.length; i++) {
+                  var lpn_input;
+                  if(i >= lpn_var.length)
+                    lpn_input = 0;
+                  else
+                    lpn_input = lpn_var[i];
+
+                  OPERATION_add_row();
+                  OPERATION_get_OPERATION(slot_idx).html('READ');
+                  OPERATION_get_LPN(slot_idx).html(lpn_input);
+                  OPERATION_get_DATA(slot_idx).html('empty');
+                  slot_idx += 1;
+                  OPERATION_ROWS += 1;
+                }
+              } else {
+                OPERATION_add_row();
+                OPERATION_get_OPERATION(slot_idx).html('READ');
+                OPERATION_get_LPN(slot_idx).html(lpn_var);
+                OPERATION_get_DATA(slot_idx).html('empty');
+                slot_idx += 1;
+                OPERATION_ROWS += 1;
+              }              
+            } else if(res[idx] == 'write') {
+              var lpn_isArray = false;
+              var data_isArray = false;
+              // OPERATION_get_OPERATION(slot_idx).html('WRITE');
+              idx += 1;
+              // var temp = res[idx].split('-');
+              // console.log(res[idx] + " hypen: " + res[idx].indexOf('-'));
+              // console.log(res[idx] + " comma: " + res[idx].indexOf(','));
+              var lpn_var = res[idx];
+              if(find_char(lpn_var, '-') == true) {
+                lpn_isArray = true;
+                var lpn_temp = res[idx].split('-');
+                var lpn_length = Number(lpn_temp[1]) - Number(lpn_temp[0]);
+                console.log("lpn_temp[1]: " + lpn_temp[1]);
+                console.log("lpn_temp[0]: " + lpn_temp[0]);
+                lpn_var = Array();
+                for(var i = 0; i <= lpn_length; i++)
+                  lpn_var[i] = Number(lpn_temp[0]) + i;
+              } else if(find_char(lpn_var, ',') == true) {
+                lpn_isArray = true;
+                lpn_var = res[idx].split(',')
+              }
+              // OPERATION_get_LPN(slot_idx).html(res[idx]);
+              idx += 1;
+              var data_var = res[idx];
+              if(find_char(data_var, '-') == true) {
+                data_isArray = true;
+                data_temp = res[idx].split('-');
+                var data_length = Number(data_temp[1]) - Number(data_temp[0]);
+                data_var = Array();
+                for(var i = 0; i <= data_length; i++)
+                  data_var[i] = Number(data_temp[0]) + i;
+              } else if(find_char(data_var, ',')) {
+                data_isArray = true;
+                data_var = res[idx].split(',');
+              }
+              // OPERATION_get_DATA(slot_idx).html(res[idx]);
+              if(lpn_isArray || data_isArray) {
+                for(var i = 0; i < lpn_var.length || i < data_var.length; i++) {
+                  var lpn_input;
+                  var data_input;
+                  if(i >= lpn_var.length)
+                    lpn_input = 0;
+                  else
+                    lpn_input = lpn_var[i];
+                  if(i >= data_var.length)
+                    data_input = 0;
+                  else
+                    data_input = data_var[i];
+
+                  OPERATION_add_row();
+                  OPERATION_get_OPERATION(slot_idx).html('WRITE');
+                  OPERATION_get_LPN(slot_idx).html(lpn_input);
+                  OPERATION_get_DATA(slot_idx).html(data_input);
+                  slot_idx += 1;
+                  OPERATION_ROWS += 1;
+                  console.log("isArray OPERATION_ROWS: " + OPERATION_ROWS);
+                  console.log("lpn_input: " + lpn_input);
+                  console.log("data_input: " + data_input);
+                }
+              } else {
+                OPERATION_add_row();
+                OPERATION_get_OPERATION(slot_idx).html('WRITE');
+                OPERATION_get_LPN(slot_idx).html(lpn_var);
+                OPERATION_get_DATA(slot_idx).html(data_var);
+                slot_idx += 1;
+                OPERATION_ROWS += 1;
+                console.log("NOArray OPERATION_ROWS: " + OPERATION_ROWS);
+              }
+            }
+            idx += 1;
+          }
+        };
+        reader.readAsText(input.files[0]);
+      };
+    </script>
+    <span id = "CMT_NAME" class = "name">CMT</span>
+    <span id = "GTD_NAME" class = "name">GTD</span>
+    <span id = "DATA_NAME" class = "name">DATA BLK</span>
+    <span id = "MAP_NAME" class = "name">MAP BLK</span>
+    
+
+    <table id = "CMT">
+      <thead id = "CMT_head">
+        <th style="border-top-left-radius: 5px;">PPN</th>
+        <th>LPN</th>
+        <th>Dirty</th>
+        <th style="border-top-right-radius: 5px;">Access</th>
+      </thead>
+      <tbody id="CMT-tbody"></tbody>
+    </table>
+    <table id = "OPERATION">
+      <thead>
+        <th style="border-top-left-radius: 5px;">NUM</th>
+        <th>OPER</th>
+        <th>LPN</th>
+        <th style="border-top-right-radius: 5px;">DATA</th>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <table id = "GTD">
+      <thead id = "GTD_head">
+        <th style="border-top-left-radius: 5px;">LPN</th>
+      </thead>
+      <tbody id="GTD-tbody">
+        <th style="border-bottom-left-radius: 5px;">PPN</th>
+      </tbody>
+    </table>
+    <!-- Data Block -->
+    <table id = "DATA_BLK0" class = "DATA_BLK">
+      <thead>
+        <th style="border-top-left-radius: 5px;">Page</th>
+        <th>Data</th>
+        <th>LPN</th>
+        <th style="border-top-right-radius: 5px;">State</th>
+      </thead>
+      <tbody id="DATA-tbody"></tbody>
+    </table>
+    <!-- Map Block -->
+    <table id = "MAP_BLK0" class = "MAP_BLK">
+      <thead>
+        <th style="border-top-left-radius: 5px;">Page</th>
+        <th>PPN</th>
+        <th>LPN</th>
+        <th style="border-top-right-radius: 5px;">State</th>
+      </thead>
+      <tbody id="MAP-tbody"></tbody>
+    </table>
+
+    <script>
+      $('.ui.dropdown').dropdown({
+        direction: 'downward',
+        duration:800,
+        onChange: function(value, text, $choice) {
+        }
+      });
+      $.urlParam = function(name){
+          var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+          if (results==null){
+             return null;
+          }
+          else{
+             return results[1] || 0;
+          }
+      }
+      $("#play_pause").attr('disabled', true);
+      var stat_save_arr = new Array();
+      var stat_idx = -1;
+      var N_MAP_ENTRIES_PER_PAGE  = 1;
+      var N_CACHED_MAP_PAGE_PB = 4;
+      if($.urlParam('CMT_PAGE') != null) {
+       N_CACHED_MAP_PAGE_PB = Number($.urlParam('CMT_PAGE'));
+      }
+      var N_MAP_PAGES_PB = (PAGES_PER_BANK / N_MAP_ENTRIES_PER_PAGE);
+
+      var delay = 1500;
+      var timeld = null;
+      var CMT_numofRAW = 0;
+      var OPERATION_numofRAW = 0;
+      var DATA_numofPAGE = 0;
+      var MAP_numofPAGE = 0;
+      var DATA_numofBLK = 1;
+      var MAP_numofBLK = 1;
+
+      var DATA_BLKS_PER_BANK = 4;
+      if($.urlParam('DATA_BLK') != null) {
+        DATA_BLKS_PER_BANK = Number($.urlParam('DATA_BLK'));
+      }
+      var MAP_BLKS_PER_BANK = 4;
+      if($.urlParam('MAP_BLK') != null) {
+        MAP_BLKS_PER_BANK = Number($.urlParam('MAP_BLK'));
+      }
+      var PAGES_PER_BLK = 4;
+      if($.urlParam('BLK_PAGE') != null) {
+        PAGES_PER_BLK = Number($.urlParam('BLK_PAGE'));
+      }
+      var BLKS_PER_BANK = DATA_BLKS_PER_BANK + MAP_BLKS_PER_BANK;
+      var PAGES_PER_BANK = (BLKS_PER_BANK * PAGES_PER_BLK);
+
+      var DATA_PAGES_PER_BANK = DATA_BLKS_PER_BANK * PAGES_PER_BLK;
+      var MAP_PAGES_PER_BANK = Number(MAP_BLKS_PER_BANK) * Number(PAGES_PER_BLK);
+      var GTD_PER_BANK = (DATA_BLKS_PER_BANK - 1) * PAGES_PER_BLK - 1;
+      var OPERATION_ROWS = 5;
+      var OPERATION_CNT = 0;
+      $("#data_blk_inc").click(function() {
+        if(DATA_BLKS_PER_BANK >= 5) {
+          alert("MAX DATA BLK NUM");
+          return;
+        }
+        var url = "./demand_based_ftl.html?DATA_BLK=" + (Number(DATA_BLKS_PER_BANK) + 1) + "&MAP_BLK=" + (MAP_BLKS_PER_BANK) + "&BLK_PAGE=" + (PAGES_PER_BLK) + "&CMT_PAGE=" + (N_CACHED_MAP_PAGE_PB);
+        $(location).attr('href', url);
+      });
+      $("#data_blk_dec").click(function() {
+        if(DATA_BLKS_PER_BANK <= 2) {
+          alert("MIN DATA BLK NUM");
+          return;
+        }
+        var url = "./demand_based_ftl.html?DATA_BLK=" + (Number(DATA_BLKS_PER_BANK) - 1) + "&MAP_BLK=" + (MAP_BLKS_PER_BANK) + "&BLK_PAGE=" + (PAGES_PER_BLK) + "&CMT_PAGE=" + (N_CACHED_MAP_PAGE_PB);
+        $(location).attr('href', url);
+      });
+      $("#map_blk_inc").click(function() {
+        if(MAP_BLKS_PER_BANK >= 5) {
+          alert("MAX MAP BLK NUM");
+          return;
+        }
+        var url = "./demand_based_ftl.html?DATA_BLK=" + (DATA_BLKS_PER_BANK) + "&MAP_BLK=" + (Number(MAP_BLKS_PER_BANK) + 1) + "&BLK_PAGE=" + (PAGES_PER_BLK) + "&CMT_PAGE=" + (N_CACHED_MAP_PAGE_PB);
+        $(location).attr('href', url);
+      });
+      $("#map_blk_dec").click(function() {
+        if(MAP_BLKS_PER_BANK <= 2) {
+          alert("MIN DATA BLK NUM");
+          return;
+        }
+        var url = "./demand_based_ftl.html?DATA_BLK=" + (DATA_BLKS_PER_BANK) + "&MAP_BLK=" + (Number(MAP_BLKS_PER_BANK) - 1) + "&BLK_PAGE=" + (PAGES_PER_BLK) + "&CMT_PAGE=" + (N_CACHED_MAP_PAGE_PB);
+        $(location).attr('href', url);
+      });
+      $("#page_per_blk_inc").click(function() {
+        if(PAGES_PER_BLK >= 6) {
+          alert("MAX PAGE NUM");
+          return;
+        }
+        var url = "./demand_based_ftl.html?DATA_BLK=" + (DATA_BLKS_PER_BANK) + "&MAP_BLK=" + (MAP_BLKS_PER_BANK) + "&BLK_PAGE=" + (Number(PAGES_PER_BLK) + 1) + "&CMT_PAGE=" + (N_CACHED_MAP_PAGE_PB);
+        $(location).attr('href', url);
+      });
+      $("#page_per_blk_dec").click(function() {
+        if(PAGES_PER_BLK <= 1) {
+          alert("MIN PAGE NUM");
+          return;
+        }
+        var url = "./demand_based_ftl.html?DATA_BLK=" + (DATA_BLKS_PER_BANK) + "&MAP_BLK=" + (MAP_BLKS_PER_BANK) + "&BLK_PAGE=" + (Number(PAGES_PER_BLK) - 1) + "&CMT_PAGE=" + (N_CACHED_MAP_PAGE_PB);
+        $(location).attr('href', url);
+      });
+      $("#cmt_page_inc").click(function() {
+        if(N_CACHED_MAP_PAGE_PB >= 5) {
+          alert("MAX CMT SLOT NUM");
+          return;
+        }
+        var url = "./demand_based_ftl.html?DATA_BLK=" + (DATA_BLKS_PER_BANK) + "&MAP_BLK=" + (MAP_BLKS_PER_BANK) + "&BLK_PAGE=" + (PAGES_PER_BLK) + "&CMT_PAGE=" + (Number(N_CACHED_MAP_PAGE_PB) + 1);
+        $(location).attr('href', url);
+      });
+      $("#cmt_page_dec").click(function() {
+        if(N_CACHED_MAP_PAGE_PB <= 2) {
+          alert("MIN CMT SLOT NUM");
+          return;
+        }
+        var url = "./demand_based_ftl.html?DATA_BLK=" + (DATA_BLKS_PER_BANK) + "&MAP_BLK=" + (MAP_BLKS_PER_BANK) + "&BLK_PAGE=" + (PAGES_PER_BLK) + "&CMT_PAGE=" + (Number(N_CACHED_MAP_PAGE_PB) - 1);
+        $(location).attr('href', url);
+      });
+      
+      $('#cancle').click(function() {
+        cancle_func();
+      });
+
+      $('#delay').html(delay);
+
+      $('#delay_down').click(function() {
+        if(delay <= 0) {
+          alert("delay can't be under 0");
+          return;
+        }
+        delay -= 100;
+        $('#delay').html(delay);
+      });
+
+      $('#delay_up').click(function() {
+        if(delay >= 3000) {
+          alert("delay can't be over 3000");
+          return;
+        }
+        delay += 100;
+        $('#delay').html(delay);
+      });
+
+
+      $("#step_back").click( function() {
+        step_back_func();
+      });
+      $("#step_foward").click( function() {
+        step_foward_func();
+      });
+
+      $("#Write").click( function() {
+        var LPN_val = $("#LPN_input").val();
+        var DATA_val = $("#DATA_input").val();
+
+        if(LPN_val >= GTD_PER_BANK) {
+          alert("Wrong LPN number! (LPN range: 0 ~ " + (GTD_PER_BANK - 1) + ")");
+          return;
+        }
+
+        $("#LPN_input").val(''); $("#DATA_input").val('');
+        $("#play_pause").val('pause').attr('disabled', false);
+        $("#Write").attr('disabled', true);
+        $("#Read").attr('disabled', true);
+        $("#delay_up").attr('disabled', true);
+        $("#delay_down").attr('disabled', true);
+        $("#step_back").attr('disabled', true);
+        $("#step_foward").attr('disabled', true);
+        $("#cancle").attr('disabled', true);
+        $("#Operate").attr('disabled', true);
+   
+        ftl_write(LPN_val, DATA_val, 0);
+      });
+      $("#Read").click( function() {
+        var LPN_val = $("#LPN_input2").val();
+        if(LPN_val >= GTD_PER_BANK) {
+          alert("Wrong LPN number! (LPN range: 0 ~ " + (GTD_PER_BANK - 1) + ")");
+          return;
+        }
+
+        $("#LPN_input2").val('');
+        $("#play_pause").val('pause').attr('disabled', false);
+        $("#Write").attr('disabled', true);
+        $("#Read").attr('disabled', true);
+        $("#delay_up").attr('disabled', true);
+        $("#delay_down").attr('disabled', true);
+        $("#step_back").attr('disabled', true);
+        $("#step_foward").attr('disabled', true);
+        $("#cancle").attr('disabled', true);
+        $("#Operate").attr('disabled', true);
+        ftl_read(LPN_val, 0);
+      });
+      $("#Operate").click( function() {
+        var oper = OPERATION_get_OPERATION(0).html();
+        var LPN_val = OPERATION_get_LPN(0).html();
+        var DATA_val = OPERATION_get_DATA(0).html();
+
+        if(LPN_val >= GTD_PER_BANK) {
+          alert("Wrong LPN number! (LPN range: 0 ~ " + (GTD_PER_BANK - 1) + ")");
+          return;
+        }
+
+        $("#play_pause").val('pause').attr('disabled', false);
+        $("#Write").attr('disabled', true);
+        $("#Operate").attr('disabled', true);
+        $("#Read").attr('disabled', true);
+        $("#delay_up").attr('disabled', true);
+        $("#delay_down").attr('disabled', true);
+        $("#step_back").attr('disabled', true);
+        $("#step_foward").attr('disabled', true);
+        $("#cancle").attr('disabled', true);
+
+        if(oper == 'WRITE')
+          ftl_write(LPN_val, DATA_val, 1);
+        if(oper == 'READ')
+          ftl_read(LPN_val, 1);
+      });
+
+      $("#play_pause").click( function() {
+        if(timeld == null) {
+          animation_func();
+          $("#delay_up").attr('disabled', true);
+          $("#delay_down").attr('disabled', true);
+          $("#step_back").attr('disabled', true);
+          $("#step_foward").attr('disabled', true);
+          // $("#cancle").attr('disabled', true);
+          timeld = setInterval(animation_func, delay);
+          $(this).val('pause');
+        }
+        else {
+          clearInterval(timeld);
+          $(this).val('play');
+          $("#delay_up").attr('disabled', false);
+          $("#delay_down").attr('disabled', false);
+          $("#step_back").attr('disabled', false);
+          $("#step_foward").attr('disabled', false);
+          // $("#cancle").attr('disabled', false);
+          timeld = null;
+        }
+      });
+
+
+      function ftl_write(lpn, data, oper) {
+        var step_info;
+        add_stat();
+        if(stat_idx > 0)
+          copy_stat(stat_idx, stat_idx - 1);
+
+        if(oper == 1) {
+          var step_info = alloc_step();
+          step_info.motion = 'operation start';
+          step_info.info = 'Operate First Line';
+        }
+
+        var now_stat = stat_save_arr[stat_idx];
+        if(DATA_gc_condition_check(now_stat) == true) {
+          DATA_garbage_collection(now_stat);
+        }
+
+        var LoadtoCMT_called = 0;
+        
+        if(IsInCMT(lpn, now_stat) == false) {
+          LoadtoCMT(lpn, now_stat); //it is possible that the lpn doesn't exist anywere, than ppn of the lpn is -1
+          LoadtoCMT_called = 1;
+        }
+        var ppn = getPPNfromCMT(lpn, now_stat);
+        console.log("ppn: " + ppn);
+        if(ppn != -1) { //if ppn exist, make it invalid
+          MakePageInvalid(ppn, "DATA", now_stat);
+        }
+        ppn = get_new_data_page_num(now_stat);
+        DATA_write_to_page(ppn, data, lpn, now_stat);
+
+        // ChangePPNofLPNinCMT(lpn, ppn, now_stat);  //the lpn must be in the CMT
+
+        var slot_idx = get_slot_idx(lpn, now_stat);
+        now_stat.cmt_ppn[slot_idx] = ppn;
+        now_stat.cmt_dirty[slot_idx] = 1;
+        if(LoadtoCMT_called == 0) {
+          now_stat.cmt_access[slot_idx] = now_stat.accessed_time;
+          now_stat.accessed_time++;
+        }
+        
+
+        var step_info = alloc_step();
+        step_info.motion = 'change cmt slot';
+        step_info.info = 'Update New Data Page';
+        step_info.ppn = ppn;
+        step_info.slot_idx = slot_idx;
+        step_info.lpn = lpn;
+        step_info.dirty = 1;
+        step_info.accessed_time = now_stat.accessed_time - 1;
+
+        //animation
+        //CMT_get_Dirty(slot_idx).html(1);
+        // var step_info = alloc_step();
+        // step_info.motion = 'write dirty';
+        // step_info.slot_idx = slot_idx;
+
+        // //CMT_get_Access(slot_idx).html(now_stat.accessed_time);
+        // step_info = alloc_step();
+        // step_info.motion = 'change access time'
+        // step_info.slot_idx = slot_idx;
+        // step_info.accessed_time = now_stat.accessed_time - 1;
+
+        if(oper == 1) {
+          step_info = alloc_step();
+          step_info.motion = 'operation finish';
+          step_info.info = 'Delete First Line';
+        }
+
+        animation_func();
+        timeld = setInterval(animation_func, delay);
+      }
+
+      function ftl_read(lpn, oper) {
+        var step_info;
+        add_stat();
+        if(stat_idx > 0)
+          copy_stat(stat_idx, stat_idx - 1);
+
+        if(oper == 1) {
+          var step_info = alloc_step();
+          step_info.motion = 'operation start';
+          step_info.info = 'Operate First Line';
+        }
+
+        var now_stat = stat_save_arr[stat_idx];
+        var LoadtoCMT_called = 0;
+        
+        if(IsInCMT(lpn, now_stat) == false) {
+          LoadtoCMT(lpn, now_stat); //it is possible that the lpn doesn't exist anywere, than ppn of the lpn is -1
+          LoadtoCMT_called = 1;
+        }
+        var ppn = getPPNfromCMT(lpn, now_stat);
+        var slot_idx = get_slot_idx(lpn, now_stat);
+
+        if(LoadtoCMT_called == 0) {
+          now_stat.cmt_access[slot_idx] = now_stat.accessed_time;
+          now_stat.accessed_time++;
+        }
+        var step_info = alloc_step();
+        step_info.motion = 'change cmt slot';
+        step_info.info = 'Check ppn';
+        step_info.ppn = ppn;
+        if(ppn == -1) {
+          step_info.ppn = 'none';
+          step_info.info += ': none';
+        }
+        step_info.slot_idx = slot_idx;
+        step_info.lpn = lpn;
+        step_info.dirty = 1;
+        step_info.accessed_time = now_stat.accessed_time - 1;
+
+        if(ppn != -1) {
+          console.log("ppn: " + ppn);
+          step_info = alloc_step();
+          step_info.motion = 'DATA write page';
+          step_info.info = 'Read Data: ' + now_stat.data_page_data[ppn];
+          step_info.empty_ppn = false;
+          step_info.ppn = ppn;
+          step_info.data = now_stat.data_page_data[ppn];
+          step_info.lpn = now_stat.data_page_spare[ppn];
+          step_info.state = now_stat.data_page_stat[ppn];
+        }
+
+        if(oper == 1) {
+          step_info = alloc_step();
+          step_info.motion = 'operation finish';
+          step_info.info = 'Delete First Line';
+        }
+
+        animation_func();
+        timeld = setInterval(animation_func, delay);
+      }
+
+      function get_slot_idx(lpn, now_stat) {
+        for(var i = 0; i < N_CACHED_MAP_PAGE_PB; i++) {
+          if(now_stat.cmt_lpn[i] == lpn)
+            return i;
+        }
+        return -1;  //There is no lpn matched
+      }
+
+      // function ChangePPNofLPNinCMT(lpn, ppn, now_stat) {
+      //   var slot_idx = get_slot_idx(lpn, now_stat);
+      //   now_stat.cmt_ppn[slot_idx] = ppn;
+
+      //   //animation
+      //   //CMT_get_PPN(slot_idx).html(ppn);
+      //   var step_info = alloc_step();
+      //   step_info.motion = 'change cmt ppn'
+      //   step_info.slot_idx = slot_idx;
+      //   step_info.ppn = ppn;
+
+      // }
+
+      function DATA_write_to_page(ppn, data, lpn, now_stat) {
+        now_stat.data_page_data[ppn] = data;
+        now_stat.data_page_spare[ppn] = lpn;
+        now_stat.data_page_stat[ppn] = 'valid';
+
+        //animation
+        // DATA_BLK_get_Data(ppn).html(data);
+        // DATA_BLK_get_LPN(ppn).html(lpn);
+        // DATA_BLK_get_State(ppn).html('valid');
+        var step_info = alloc_step();
+        step_info.motion = 'DATA write page';
+        step_info.info = 'Write Data Page';
+        step_info.ppn = ppn;
+        step_info.data = data;
+        step_info.lpn = lpn;
+        step_info.state = 'valid';
+        step_info.make_empty = false;
+        step_info.empty_ppn = -1;
+      }
+
+      function get_new_data_page_num(now_stat) {
+        if(DATA_gc_condition_check(now_stat) == true) {
+          DATA_garbage_collection(now_stat);
+        }
+        var ret = now_stat.data_page_to_write;
+        now_stat.data_page_to_write += 1;
+        return ret;
+      }
+
+      function MakePageInvalid(ppn, blk_type, now_stat) {
+        console.log("MakePageInvalid");
+        console.log("ppn: " + ppn);
+        console.log("blk_type: " + blk_type);
+
+        var step_info = alloc_step();
+        if(blk_type == "DATA") {
+          now_stat.data_page_stat[ppn] = 'invalid';
+          //animation
+          // DATA_BLK_get_State(ppn).html('invalid');
+          step_info.motion = 'DATA write page';
+          step_info.info = 'Make Invalid';
+          step_info.ppn = ppn;
+          step_info.data = now_stat.data_page_data[ppn];
+          step_info.lpn = now_stat.data_page_spare[ppn];
+          step_info.state = 'invalid';
+          step_info.make_empty = false;
+          step_info.empty_ppn = -1;
+
+        } else {
+          now_stat.map_page_stat[ppn] = 'invalid';
+          // MAP_BLK_get_State(ppn).html('invalid');
+          step_info.motion = 'MAP write page';
+          step_info.coment = 'make invalid!';
+          step_info.info = 'Make invalid';
+          step_info.ppn = ppn;
+          step_info.mapping_ppn = now_stat.map_page_ppn[ppn];
+          step_info.lpn = now_stat.map_page_spare[ppn];
+          step_info.state = 'invalid';
+          step_info.chage_cmt = false;
+          step_info.slot_idx = -1;
+          step_info.make_empty = false;
+          step_info.empty_ppn = -1;
+        }
+
+      }
+
+      function getPPNfromCMT(lpn, now_stat) {
+        var slot_idx = get_slot_idx(lpn, now_stat);
+        if(slot_idx == -1)
+          return -1;
+        return now_stat.cmt_ppn[slot_idx];
+      }
+
+      function IsInCMT(lpn, now_stat) {
+        console.log("IsInCMT");
+        for(var i = 0; i < N_CACHED_MAP_PAGE_PB; i++) {
+          var cmt_lpn = now_stat.cmt_lpn[i];
+
+          if(cmt_lpn == lpn)
+            return true;
+        }
+        return false;
+      }
+
+      function LoadtoCMT(lpn, now_stat) {
+        console.log("LoadtoCMT");
+        var slot_idx = select_evict_slot(now_stat);
+        var slot_lpn = now_stat.cmt_lpn[slot_idx];
+
+        console.log("slot_lpn: " + slot_lpn);
+
+        if(slot_lpn != -1)  //none empty slot -> evict victim slot
+          evict_slot(slot_idx, now_stat);
+
+        //get map_page of the lpn
+        var map_page = now_stat.gtd_ppn[Number(lpn)];
+        console.log("map_page test: " + now_stat.gtd_ppn[1]);
+        console.log("LoadtoCMT lpn: " + lpn);
+        console.log("LoadtoCMT map_page: " + map_page)
+
+        var ppn;
+        if(map_page != -1) {
+          ppn = now_stat.map_page_ppn[Number(map_page)];
+        } else {
+          ppn = -1;
+        }
+        console.log("LoadtoCMT ppn: " + ppn);
+
+        now_stat.cmt_ppn[slot_idx] = ppn;
+        now_stat.cmt_lpn[slot_idx] = lpn;
+        now_stat.cmt_dirty[slot_idx] = 0;
+        now_stat.cmt_access[slot_idx] = now_stat.accessed_time;
+        now_stat.accessed_time += 1;
+
+        //animation
+        // CMT_get_PPN(slot_idx).html(ppn);
+        // CMT_get_LPN(slot_idx).html(lpn);
+        // CMT_get_Dirty(slot_idx).html(0);
+        // CMT_get_Access(slot_idx).html();
+        var step_info = alloc_step();
+        step_info.motion = 'change cmt slot';
+        step_info.info = 'Load the Page to CMT';
+        step_info.slot_idx = slot_idx;
+        step_info.ppn = ppn;
+        if(ppn == -1)
+          step_info.ppn = 'none';
+        step_info.lpn = lpn;
+        step_info.dirty = 0;
+        step_info.accessed_time = now_stat.accessed_time - 1;
+        step_info.map_page = map_page;
+      }
+
+      function select_evict_slot(now_stat) {
+        var ret_idx = 0;
+        var ret_access_time = now_stat.cmt_access[0];        
+        for(var i = 0; i < N_CACHED_MAP_PAGE_PB; i++) {
+          var cmt_lpn = now_stat.cmt_lpn[i];
+          if(cmt_lpn == -1)
+            return i;
+
+          var access_time = now_stat.cmt_access[i];
+          if(access_time < ret_access_time) {
+            ret_idx = i;
+            ret_access_time = access_time;
+          }
+        }
+        return ret_idx;
+      }
+
+      function evict_slot(slot_idx, now_stat) {
+        console.log("evict_slot");
+
+        var cmt_ppn = now_stat.cmt_ppn[slot_idx];
+        var lpn = now_stat.cmt_lpn[slot_idx];
+
+        if(now_stat.cmt_dirty[slot_idx] == 0) {
+          now_stat.cmt_ppn[slot_idx] = -1;
+          now_stat.cmt_lpn[slot_idx] = -1;
+          now_stat.cmt_dirty[slot_idx] = 0;
+          now_stat.cmt_access[slot_idx] = 0;
+
+          //animation
+          // CMT_get_PPN(slot_idx).html('');
+          // CMT_get_LPN(slot_idx).html(-1);
+          // CMT_get_Dirty(slot_idx).html(0);
+          // CMT_get_Access(slot_idx).html(0);
+          step_info = alloc_step();
+          step_info.motion = 'change cmt slot';
+          step_info.info = 'Empty CMT Slot';
+          step_info.slot_idx = slot_idx;
+          step_info.ppn = '';
+          step_info.lpn = -1;
+          step_info.dirty = 0;
+          step_info.accessed_time = 0;
+          return;
+        }
+
+        var new_map_page_num = get_new_map_page_num(now_stat);
+        var map_page = now_stat.gtd_ppn[lpn];
+        var step_info;
+
+        if(map_page != -1) {
+          MakePageInvalid(map_page, "MAP", now_stat);
+        }
+        
+
+        MAP_write_to_page(new_map_page_num, cmt_ppn, Number(lpn), now_stat, slot_idx);
+        
+        now_stat.gtd_ppn[Number(lpn)] = new_map_page_num;
+        now_stat.cmt_ppn[slot_idx] = '';
+        now_stat.cmt_lpn[slot_idx] = -1;
+        now_stat.cmt_dirty[slot_idx] = 0;
+        now_stat.cmt_access[slot_idx] = 0;
+
+
+
+
+        //animation
+        // GTD_get_map_page(Number(lpn)).html(MAPtoDATA_page(new_map_page_num));
+        step_info = alloc_step();
+        step_info.motion = 'change gtd map_page';
+        step_info.info = 'Write New Map Page';
+        step_info.lpn = Number(lpn);
+        step_info.new_map_page_num = MAPtoDATA_page(new_map_page_num);
+
+
+        // CMT_get_LPN(slot_idx).html(-1);
+        // CMT_get_Dirty(slot_idx).html(0);
+        // CMT_get_Access(slot_idx).html(0);
+        // step_info = alloc_step();
+        // step_info.motion = 'change cmt slot';
+        // step_info.slot_idx = slot_idx;
+        // step_info.ppn = '';
+        // step_info.lpn = -1;
+        // step_info.dirty = 0;
+        // step_info.accessed_time = 0;
+      }      
+
+      function MAP_write_to_page(map_page_num, cmt_ppn, lpn, now_stat, slot_idx) {
+        console.log("MAP_write_to_page");
+        console.log("map_page_num: " + map_page_num);
+        console.log("cmt_ppn: " + cmt_ppn);
+        now_stat.map_page_ppn[Number(map_page_num)] = cmt_ppn;
+        now_stat.map_page_spare[Number(map_page_num)] = lpn;
+        now_stat.map_page_stat[Number(map_page_num)] = 'valid';
+
+        console.log("MAP_write_to_page ppn: " + now_stat.map_page_ppn[0]);
+
+        //animation
+        // MAP_BLK_get_PPN(map_page_num).html(cmt_ppn);
+        // MAP_BLK_get_LPN(map_page_num).html(lpn);
+        // MAP_BLK_get_State(map_page_num).html('valid');
+        var step_info = alloc_step();
+        step_info.motion = 'MAP write page';
+        step_info.coment = 'make valid!';
+        step_info.info = 'Write Map Page';
+        step_info.ppn = map_page_num;
+        step_info.mapping_ppn = cmt_ppn;
+        step_info.lpn = lpn;
+        step_info.state = 'valid';
+        step_info.chage_cmt = true;
+        step_info.slot_idx = slot_idx;
+        step_info.make_empty = false;
+        step_info.empty_ppn = -1;
+
+        // CMT_get_Access(slot_idx).html(0);
+        // step_info = alloc_step();
+        // step_info.motion = 'change cmt slot';
+        // step_info.slot_idx = slot_idx;
+        // step_info.ppn = '';
+        // step_info.lpn = -1;
+        // step_info.dirty = 0;
+        // step_info.accessed_time = 0;
+
+      }
+
+      function get_new_map_page_num(now_stat) {
+        if(MAP_gc_condition_check(now_stat) == true)
+          MAP_garbage_collection(now_stat);
+
+        var ret = now_stat.map_page_to_write;
+        now_stat.map_page_to_write += 1;
+        return ret;
+      }
+
+      function MAP_gc_condition_check(now_stat) {
+        var page_num = now_stat.map_page_to_write;
+        var blk_num = parseInt(page_num / PAGES_PER_BLK);
+        if(page_num >= PAGES_PER_BLK * MAP_BLKS_PER_BANK || blk_num == now_stat.map_free_blk_idx || now_stat.map_page_stat[page_num] != 'empty')
+          return true;
+        return false;
+      }
+
+      function MAP_find_victim_blk(now_stat) {
+        var ret_blk = -1;
+        var ret_valid = PAGES_PER_BLK + 1;
+
+        for(var cand_blk = 0; cand_blk < MAP_BLKS_PER_BANK; cand_blk++) {
+          var cand_valid = 0;
+          if(cand_blk != now_stat.map_free_blk_idx) {
+            for(var i = 0; i < PAGES_PER_BLK; i++) {
+              if(now_stat.map_page_stat[cand_blk * PAGES_PER_BLK + i] == 'valid')
+                cand_valid += 1;
+            }
+            if(cand_valid < ret_valid) {
+              ret_blk = cand_blk;
+              ret_valid = cand_valid;
+            }
+          }
+        }
+
+        return ret_blk;
+      }
+
+      function DATA_find_victim_blk(now_stat) {
+        var ret_blk = -1;
+        var ret_valid = PAGES_PER_BLK + 1;
+
+        for(var cand_blk = 0; cand_blk < DATA_BLKS_PER_BANK; cand_blk++) {
+          var cand_valid = 0;
+          if(cand_blk != now_stat.data_free_blk_idx) {
+            for(var i = 0; i < PAGES_PER_BLK; i++) {
+              if(now_stat.data_page_stat[cand_blk * PAGES_PER_BLK + i] == 'valid')
+                cand_valid += 1;
+            }
+            console.log("cand_blk: " + cand_blk);
+            console.log("cand_valid: " + cand_valid);
+            if(cand_valid < ret_valid) {
+              ret_blk = cand_blk;
+              ret_valid = cand_valid;
+            }
+          }
+        }
+
+        return ret_blk;
+      }
+
+      function MAP_garbage_collection(now_stat) {
+        var victim_blk = MAP_find_victim_blk(now_stat);
+
+        var victim_start_page = victim_blk * PAGES_PER_BLK;
+        var free_start_page = now_stat.map_free_blk_idx * PAGES_PER_BLK;
+        var valid_cnt = 0;
+        var step_info;
+
+        for(var i = 0; i < PAGES_PER_BLK; i++) {
+          var victim_page_num = victim_start_page + i;
+          if(now_stat.map_page_stat[victim_page_num] == 'valid') {
+            var free_page_num = free_start_page + valid_cnt;
+            valid_cnt += 1;
+
+            now_stat.map_page_ppn[free_page_num] = now_stat.map_page_ppn[victim_page_num];
+            now_stat.map_page_spare[free_page_num] = now_stat.map_page_spare[victim_page_num];
+            now_stat.map_page_stat[free_page_num] = 'valid';
+
+            //animation
+            // MAP_BLK_get_PPN(free_page_num).html(now_stat.map_page_ppn[victim_page_num]);
+            // MAP_BLK_get_LPN(free_page_num).html(now_stat.map_page_spare[victim_page_num]);
+            // MAP_BLK_get_State(free_page_num).html('valid');
+            step_info = alloc_step();
+            step_info.motion = 'MAP write page';
+            step_info.info = 'Move Valid Page';
+            step_info.ppn = free_page_num;
+            step_info.mapping_ppn = now_stat.map_page_ppn[victim_page_num];
+            step_info.lpn = now_stat.map_page_spare[victim_page_num];
+            step_info.state = 'valid';
+            step_info.chage_cmt = false;
+            step_info.slot_idx = -1;
+            step_info.make_empty = true;
+            step_info.empty_ppn = victim_page_num;
+
+            var lpn = now_stat.map_page_spare[free_page_num];
+            now_stat.gtd_ppn[lpn] = free_page_num;
+
+            //animation
+            // GTD_get_map_page(lpn).html(now_stat.map_page_ppn[free_page_num]);
+            step_info = alloc_step();
+            step_info.motion = 'change gtd map_page';
+            step_info.info = 'Write New Map Page';
+            step_info.lpn = lpn;
+            step_info.new_map_page_num = MAPtoDATA_page(free_page_num);
+          } else {
+            step_info = alloc_step();
+            step_info.motion = 'MAP write page';
+            step_info.info = 'Empty Page';
+            step_info.ppn = victim_page_num;
+            step_info.mapping_ppn = '';
+            step_info.lpn = '';
+            step_info.state = 'empty';
+            step_info.map_page_to_write = free_start_page + valid_cnt;
+            step_info.chage_cmt = false;
+            step_info.slot_idx = -1;
+            step_info.make_empty = false;
+            step_info.empty_ppn = -1;
+          }
+          now_stat.map_page_ppn[victim_page_num] = -1;
+          now_stat.map_page_spare[victim_page_num] = -1;
+          now_stat.map_page_stat[victim_page_num] = 'empty';
+
+          //animation
+          // MAP_BLK_get_PPN(victim_page_num).html('');
+          // MAP_BLK_get_LPN(victim_page_num).html('');
+          // MAP_BLK_get_State(victim_page_num).html('empty');
+        }
+        now_stat.map_page_to_write = free_start_page + valid_cnt;
+        now_stat.map_free_blk_idx = victim_blk;
+      }
+
+      function DATA_gc_condition_check(now_stat) {
+        console.log("<<DATA_gc_condition_check called>>");
+        var page_num = now_stat.data_page_to_write;
+        var blk_num = parseInt(page_num / PAGES_PER_BLK);
+        console.log("page_num: " + page_num);
+        console.log("blk_num: " + blk_num);
+        console.log("data_free_blk_idx: " + now_stat.data_free_blk_idx);
+        if(page_num >= PAGES_PER_BLK * DATA_BLKS_PER_BANK || blk_num == now_stat.data_free_blk_idx || now_stat.data_page_stat[page_num] != 'empty')
+          return true;
+        return false;
+      }
+
+      function DATA_garbage_collection(now_stat) {
+        console.log("<<DATA_garbage_collection called>>");
+        var victim_blk = DATA_find_victim_blk(now_stat);
+        var victim_start_page = victim_blk * PAGES_PER_BLK;
+        var free_start_page = now_stat.data_free_blk_idx * PAGES_PER_BLK;
+        var valid_cnt = 0;
+
+        console.log("victim_blk: " + victim_blk);
+
+        for(var i = 0; i < PAGES_PER_BLK; i++) {
+          var victim_page_num = victim_start_page + i;
+          console.log("victim_page_num: " + victim_page_num);
+          if(now_stat.data_page_stat[victim_page_num] == 'valid') {
+            console.log("is valid");
+            var free_page_num = free_start_page + valid_cnt;
+            valid_cnt += 1;
+
+            now_stat.data_page_data[free_page_num] = now_stat.data_page_data[victim_page_num];
+            now_stat.data_page_spare[free_page_num] = now_stat.data_page_spare[victim_page_num];
+            now_stat.data_page_stat[free_page_num] = 'valid';
+
+            //animation
+            // DATA_BLK_get_Data(free_page_num).html(now_stat.data_page_data[victim_page_num]);
+            // DATA_BLK_get_LPN(free_page_num).html(now_stat.data_page_spare[victim_page_num]);
+            // DATA_BLK_get_State(free_page_num).html('valid');
+            var step_info = alloc_step();
+            step_info.motion = 'DATA write page';
+            step_info.info = 'Move Valid Page';
+            step_info.ppn = free_page_num;
+            step_info.data = now_stat.data_page_data[victim_page_num];
+            step_info.lpn = now_stat.data_page_spare[victim_page_num];
+            step_info.state = 'valid';
+            step_info.make_empty = true;
+            step_info.empty_ppn = victim_page_num;
+
+            var lpn = now_stat.data_page_spare[free_page_num];         
+            var ppn = free_page_num;   
+            var LoadtoCMT_called = 0;
+
+            if(IsInCMT(lpn, now_stat) == false) {
+              LoadtoCMT(lpn, now_stat); //it is possible that the lpn doesn't exist anywere, than ppn of the lpn is -1
+              LoadtoCMT_called = 1;
+            }
+            var slot_idx = get_slot_idx(lpn, now_stat);
+            now_stat.cmt_ppn[slot_idx] = ppn;
+            now_stat.cmt_dirty[slot_idx] = 1;
+            if(LoadtoCMT_called == 0) {
+              now_stat.cmt_access[slot_idx] = now_stat.accessed_time;
+              now_stat.accessed_time++;
+            }
+            
+
+            step_info = alloc_step();
+            step_info.motion = 'change cmt slot';
+            step_info.info = 'Update PPN';
+            step_info.ppn = ppn;
+            if(ppn == -1)
+              step_info.ppn = 'none';
+            step_info.slot_idx = slot_idx;
+            step_info.lpn = lpn;
+            step_info.dirty = 1;
+            step_info.accessed_time = now_stat.accessed_time - 1;
+          } else {
+            var step_info = alloc_step();
+            step_info.motion = 'DATA write page';
+            step_info.info = 'Empty Page';
+            step_info.ppn = victim_page_num;
+            step_info.data = '';
+            step_info.lpn = '';
+            step_info.state = 'empty';
+            step_info.make_empty = false;
+            step_info.empty_ppn = -1;
+          }
+
+          now_stat.data_page_data[victim_page_num] = -1;
+          now_stat.data_page_spare[victim_page_num] = -1;
+          now_stat.data_page_stat[victim_page_num] = 'empty';
+        }
+        now_stat.data_page_to_write = free_start_page + valid_cnt;
+        now_stat.data_free_blk_idx = victim_blk;
+      }
+
+
+      function cancle_func() {
+        if(stat_idx == -1) {
+          alert("initial state!");
+          return;
+        }
+        $("#CMT").remove();
+        $("#GTD").remove();
+        $("#OPERATION").remove();
+        for(var i = 0; i < DATA_BLKS_PER_BANK; i++)
+          $("#DATA_BLK" + i).remove();
+        for(var i = 0; i < MAP_BLKS_PER_BANK; i++)
+          $("#MAP_BLK" + i).remove();
+
+        var step_info = stat_save_arr[stat_idx].step_arr[0]; // state of right before
+        stat_idx -= 1;
+
+        step_info.CMT_elem.appendTo("#body");
+        step_info.GTD_elem.appendTo("#body");
+        step_info.OPERATION_elem.appendTo("#body");
+        if(step_info.file_opened == 1) {
+          $("#Operate").css("display", "block");
+          console.log("cancle_func OPERATION_ROWS: " + step_info.OPERATION_ROWS);
+          OPERATION_ROWS = step_info.OPERATION_ROWS;
+        } else {
+          $("#Operate").css("display", "none");
+        }
+        // $("#Operate").css("display", "block");
+        for(var i = 0; i < DATA_BLKS_PER_BANK; i++)
+          step_info.DATA_BLK_elem_arr[i].appendTo("#body");
+        for(var i = 0; i < MAP_BLKS_PER_BANK; i++)
+          step_info.MAP_BLK_elem_arr[i].appendTo("#body");
+      }
+
+      function step_back_func() {
+        if(stat_save_arr[stat_idx].step_idx == 0) {
+          alert("initial state!");
+          return;
+        }
+
+        $("#CMT").remove();
+        $("#GTD").remove();
+        $("#OPERATION").remove();
+        for(var i = 0; i < DATA_BLKS_PER_BANK; i++)
+          $("#DATA_BLK" + i).remove();
+        for(var i = 0; i < MAP_BLKS_PER_BANK; i++)
+          $("#MAP_BLK" + i).remove();
+
+        stat_save_arr[stat_idx].step_idx = stat_save_arr[stat_idx].step_idx - 1;
+        var step_info = stat_save_arr[stat_idx].step_arr[stat_save_arr[stat_idx].step_idx];
+
+        step_info.CMT_elem.appendTo("#body");
+        step_info.GTD_elem.appendTo("#body");
+        step_info.OPERATION_elem.appendTo("#body");
+        for(var i = 0; i < DATA_BLKS_PER_BANK; i++)
+          step_info.DATA_BLK_elem_arr[i].appendTo("#body");
+        for(var i = 0; i < MAP_BLKS_PER_BANK; i++)
+          step_info.MAP_BLK_elem_arr[i].appendTo("#body");
+      }
+      function step_foward_func() {
+        if(stat_save_arr[stat_idx].step_idx == stat_save_arr[stat_idx].step_len) {
+          alert("last state!")
+          return;
+        }
+        animation_func();
+      }
+
+      function save_step_stat(step_info) {
+        step_info.CMT_elem = $("#CMT").clone();
+        step_info.GTD_elem = $("#GTD").clone();
+        step_info.DATA_BLK_elem_arr = new Array();
+        step_info.OPERATION_elem = $("#OPERATION").clone();
+        for(var i = 0; i < DATA_BLKS_PER_BANK; i++)
+          step_info.DATA_BLK_elem_arr[i] = $("#DATA_BLK" + i).clone();
+        step_info.MAP_BLK_elem_arr = new Array();
+        for(var i = 0; i < MAP_BLKS_PER_BANK; i++)
+          step_info.MAP_BLK_elem_arr[i] = $("#MAP_BLK" + i).clone();
+      }
+
+      function alloc_step() {
+        var now_stat = stat_save_arr[stat_idx];
+        now_stat.step_arr[now_stat.step_len] = new Object();
+        now_stat.step_arr[now_stat.step_len].file_opened = false;
+        now_stat.step_len++;
+        return now_stat.step_arr[now_stat.step_len - 1];
+      }
+
+      function animation_func() {
+        if(stat_save_arr[stat_idx].step_idx >= stat_save_arr[stat_idx].step_len) {
+          clearInterval(timeld);
+          timeld = null;
+          $("#play_pause").val('play').attr('disabled', true);
+          $("#Write").attr('disabled', false);
+          $("#Operate").attr('disabled', false);
+          $("#Read").attr('disabled', false);
+          $("#delay_up").attr('disabled', false);
+          $("#delay_down").attr('disabled', false);
+          $("#step_back").attr('disabled', false);
+          $("#step_foward").attr('disabled', false);
+          $("#cancle").attr('disabled', false);
+      //     <button class="ui icon button" id 
+          // console.log($("#play_pause").val());
+          return;
+        }
+
+        var step_info = stat_save_arr[stat_idx].step_arr[stat_save_arr[stat_idx].step_idx];
+        stat_save_arr[stat_idx].step_idx++;
+
+        console.log("motion: " + step_info.motion);
+
+        $('body').append('<span id = "info">' + step_info.info + '</span>');
+        setTimeout(function() {
+          $("#info").remove();
+        }, delay);
+
+        if(step_info.motion == 'write dirty') {
+          save_step_stat(step_info);
+          CMT_get_Dirty(step_info.slot_idx).addClass('focus');
+          setTimeout(function() {
+            CMT_get_Dirty(step_info.slot_idx).removeClass('focus').html(1);
+          }, delay / 2);
+        } else if(step_info.motion == 'change access time') {
+          save_step_stat(step_info);
+          CMT_get_Access(step_info.slot_idx).addClass('focus');
+          setTimeout(function() {
+            CMT_get_Access(step_info.slot_idx).removeClass('focus').html(step_info.accessed_time);
+          }, delay / 2);
+        } else if(step_info.motion == 'change cmt ppn') {
+          save_step_stat(step_info);
+          CMT_get_PPN(step_info.slot_idx).addClass('focus');
+          setTimeout(function() {
+            CMT_get_PPN(step_info.slot_idx).removeClass('focus').html(step_info.ppn);
+          }, delay / 2);
+        } else if(step_info.motion == 'DATA write page') {
+          save_step_stat(step_info);
+          DATA_BLK_get_Page(step_info.ppn).addClass('focus');
+          DATA_BLK_get_Data(step_info.ppn).addClass('focus');
+          DATA_BLK_get_LPN(step_info.ppn).addClass('focus');
+          DATA_BLK_get_State(step_info.ppn).addClass('focus');
+          if(step_info.make_empty == true) {
+            DATA_BLK_get_Page(step_info.empty_ppn).addClass('focus');
+            DATA_BLK_get_Data(step_info.empty_ppn).addClass('focus');
+            DATA_BLK_get_LPN(step_info.empty_ppn).addClass('focus');
+            DATA_BLK_get_State(step_info.empty_ppn).addClass('focus');
+          }
+          // step_info.make_empty = false;
+          //   step_info.empty_ppn = -1;
+          setTimeout(function() {
+            DATA_BLK_get_Page(step_info.ppn).removeClass('focus');
+            DATA_BLK_get_Data(step_info.ppn).removeClass('focus').html(step_info.data);
+            DATA_BLK_get_LPN(step_info.ppn).removeClass('focus').html(step_info.lpn);
+            DATA_BLK_get_State(step_info.ppn).removeClass('focus').html(step_info.state);
+            if(step_info.make_empty == true) {
+              DATA_BLK_get_Page(step_info.empty_ppn).removeClass('focus');
+              DATA_BLK_get_Data(step_info.empty_ppn).removeClass('focus').html('');
+              DATA_BLK_get_LPN(step_info.empty_ppn).removeClass('focus').html('');
+              DATA_BLK_get_State(step_info.empty_ppn).removeClass('focus').html('empty');
+            }
+          }, delay / 2);
+        } else if(step_info.motion == 'MAP write page') {
+          console.log("ppn: " + step_info.ppn);
+          console.log("mapping_ppn: " + step_info.mapping_ppn);
+          console.log("lpn: " + step_info.lpn);
+          console.log("state: " + step_info.state);
+          console.log("map_page_to_write: " + step_info.map_page_to_write);
+          save_step_stat(step_info);
+          MAP_BLK_get_Page(step_info.ppn).addClass('focus');
+          MAP_BLK_get_PPN(step_info.ppn).addClass('focus');
+          MAP_BLK_get_LPN(step_info.ppn).addClass('focus');
+          MAP_BLK_get_State(step_info.ppn).addClass('focus');
+        //   step_info.chage_cmt = true;
+        // step_info.slot_idx = slot_idx;
+          if(step_info.chage_cmt == true) {
+            CMT_get_PPN(step_info.slot_idx).addClass('focus');
+            CMT_get_LPN(step_info.slot_idx).addClass('focus');
+            CMT_get_Dirty(step_info.slot_idx).addClass('focus');
+            CMT_get_Access(step_info.slot_idx).addClass('focus');
+          }
+          if(step_info.make_empty == true) {
+            // step_info.make_empty = true;
+            // step_info.empty_ppn = victim_page_num;
+            MAP_BLK_get_Page(step_info.empty_ppn).addClass('focus');
+            MAP_BLK_get_PPN(step_info.empty_ppn).addClass('focus');
+            MAP_BLK_get_LPN(step_info.empty_ppn).addClass('focus');
+            MAP_BLK_get_State(step_info.empty_ppn).addClass('focus');
+          }
+          setTimeout(function() {
+            MAP_BLK_get_Page(step_info.ppn).removeClass('focus');
+            MAP_BLK_get_PPN(step_info.ppn).removeClass('focus').html(step_info.mapping_ppn);
+            MAP_BLK_get_LPN(step_info.ppn).removeClass('focus').html(step_info.lpn);
+            MAP_BLK_get_State(step_info.ppn).removeClass('focus').html(step_info.state);
+            if(step_info.chage_cmt == true) {
+              CMT_get_PPN(step_info.slot_idx).removeClass('focus').html('');
+              CMT_get_LPN(step_info.slot_idx).removeClass('focus').html('none');
+              CMT_get_Dirty(step_info.slot_idx).removeClass('focus').html(0);
+              CMT_get_Access(step_info.slot_idx).removeClass('focus').html(0);
+            }
+            if(step_info.make_empty == true) {
+              MAP_BLK_get_Page(step_info.empty_ppn).removeClass('focus');
+              MAP_BLK_get_PPN(step_info.empty_ppn).removeClass('focus').html('');
+              MAP_BLK_get_LPN(step_info.empty_ppn).removeClass('focus').html('');
+              MAP_BLK_get_State(step_info.empty_ppn).removeClass('focus').html('empty');
+            }
+          }, delay / 2);
+        } else if(step_info.motion == 'change cmt slot') {
+          save_step_stat(step_info);
+          CMT_get_PPN(step_info.slot_idx).addClass('focus');
+          CMT_get_LPN(step_info.slot_idx).addClass('focus');
+          CMT_get_Dirty(step_info.slot_idx).addClass('focus');
+          CMT_get_Access(step_info.slot_idx).addClass('focus');
+          if(step_info.ppn != -1) {
+            MAP_BLK_get_Page(step_info.map_page).addClass('focus');
+            MAP_BLK_get_PPN(step_info.map_page).addClass('focus');
+            MAP_BLK_get_LPN(step_info.map_page).addClass('focus');
+            MAP_BLK_get_State(step_info.map_page).addClass('focus');
+          }
+          setTimeout(function() {
+            CMT_get_PPN(step_info.slot_idx).removeClass('focus').html(step_info.ppn);
+            CMT_get_LPN(step_info.slot_idx).removeClass('focus').html(step_info.lpn);
+            CMT_get_Dirty(step_info.slot_idx).removeClass('focus').html(step_info.dirty);
+            CMT_get_Access(step_info.slot_idx).removeClass('focus').html(step_info.accessed_time);
+            if(step_info.ppn != -1) {
+              MAP_BLK_get_Page(step_info.map_page).removeClass('focus');
+              MAP_BLK_get_PPN(step_info.map_page).removeClass('focus');
+              MAP_BLK_get_LPN(step_info.map_page).removeClass('focus');
+              MAP_BLK_get_State(step_info.map_page).removeClass('focus');
+            }
+          }, delay / 2);
+        } else if(step_info.motion == 'change gtd map_page') {
+          save_step_stat(step_info);
+          GTD_get_map_page(step_info.lpn).addClass('focus');
+          setTimeout(function() {
+            GTD_get_map_page(step_info.lpn).removeClass('focus').html(step_info.new_map_page_num);
+          }, delay / 2);
+        } else if(step_info.motion == 'operation start') {
+          step_info.file_opened = true;
+          step_info.OPERATION_ROWS = OPERATION_ROWS;
+          save_step_stat(step_info);
+
+          OPERATION_get_NUM(0).addClass('focus')
+          OPERATION_get_OPERATION(0).addClass('focus');
+          OPERATION_get_LPN(0).addClass('focus');
+          OPERATION_get_DATA(0).addClass('focus');
+        } else if(step_info.motion == 'operation finish') {
+          step_info.file_opened = false;
+          step_info.OPERATION_ROWS = OPERATION_ROWS;
+          console.log("OPERATION_ROWS: " + step_info.OPERATION_ROWS);
+          save_step_stat(step_info);
+          $("#OPERATION").addClass('focus');
+          // for(var i = 1; i < OPERATION_ROWS; i++) {
+          //   OPERATION_get_OPERATION(i).addClass('focus');
+          //   OPERATION_get_LPN(i).addClass('focus');
+          //   OPERATION_get_DATA(i).addClass('focus');
+          // }
+          setTimeout(function() {
+            $("#OPERATION").removeClass('focus');
+            OPERATION_get_NUM(0).removeClass('focus');
+            OPERATION_get_OPERATION(0).removeClass('focus');
+            OPERATION_get_LPN(0).removeClass('focus');
+            OPERATION_get_DATA(0).removeClass('focus');
+            for(var i = 0; i < OPERATION_ROWS; i++) {
+              // OPERATION_get_OPERATION(i).removeClass('focus');
+              // OPERATION_get_LPN(i).removeClass('focus');
+              // OPERATION_get_DATA(i).removeClass('focus');
+              if(i != 0) {
+                var op = OPERATION_get_OPERATION(i).html();
+                var lpn = OPERATION_get_LPN(i).html();
+                var data = OPERATION_get_DATA(i).html();
+                OPERATION_get_OPERATION(i - 1).html(op);
+                OPERATION_get_LPN(i - 1).html(lpn);
+                OPERATION_get_DATA(i - 1).html(data);
+              }
+              if(i == OPERATION_ROWS - 1) {
+                OPERATION_get_ROW(i).remove();
+                // OPERATION_get_NUM(i).remove();
+                // OPERATION_get_OPERATION(i).remove();
+                // OPERATION_get_LPN(i).remove();
+                // OPERATION_get_DATA(i).remove();
+              }
+            }
+            OPERATION_ROWS -= 1;
+            
+            if(OPERATION_ROWS == 0) {
+              $("#OPERATION").css("display", "none");
+              $("#Operate").css("display", "none");
+            }
+          }, delay / 2);          
+        }
+        else {
+          console.log("No motion info!");
+        }
+
+      }
+      
+      //start from here
+      function add_stat() {
+        stat_idx++;
+        stat_save_arr[stat_idx] = new Object();
+        stat_save_arr[stat_idx].accessed_time = 1;
+
+        //CMT init
+        stat_save_arr[stat_idx].cmt_ppn = new Array();
+        stat_save_arr[stat_idx].cmt_lpn = new Array();
+        stat_save_arr[stat_idx].cmt_dirty = new Array();
+        stat_save_arr[stat_idx].cmt_access = new Array();
+        for(var i = 0; i < N_CACHED_MAP_PAGE_PB; i++) {
+          stat_save_arr[stat_idx].cmt_lpn[i] = -1;
+          stat_save_arr[stat_idx].cmt_dirty[i] = 0;
+          stat_save_arr[stat_idx].cmt_access[i] = 0;          
+        }
+
+        //GTD init
+        stat_save_arr[stat_idx].gtd_ppn = new Array();
+        for(var i = 0; i < GTD_PER_BANK; i++)
+          stat_save_arr[stat_idx].gtd_ppn[i] = -1;
+
+        //DATA BLK init
+        stat_save_arr[stat_idx].data_page_stat = new Array();
+        stat_save_arr[stat_idx].data_page_data = new Array();
+        stat_save_arr[stat_idx].data_page_spare = new Array();
+        stat_save_arr[stat_idx].data_page_to_write = 0;
+        stat_save_arr[stat_idx].data_free_blk_idx = DATA_BLKS_PER_BANK - 1;
+        for(var i = 0; i < DATA_PAGES_PER_BANK; i++) {
+          stat_save_arr[stat_idx].data_page_stat[i] = 'empty';
+          stat_save_arr[stat_idx].data_page_data[i] = -1;
+          stat_save_arr[stat_idx].data_page_spare[i] = -1;
+        }
+
+        //MAP BLK init
+        stat_save_arr[stat_idx].map_page_stat = new Array();
+        stat_save_arr[stat_idx].map_page_ppn = new Array();
+        stat_save_arr[stat_idx].map_page_spare = new Array();
+        stat_save_arr[stat_idx].map_page_to_write = 0;
+        stat_save_arr[stat_idx].map_free_blk_idx = MAP_BLKS_PER_BANK - 1;
+        for(var i = 0; i < MAP_PAGES_PER_BANK; i++) {
+          stat_save_arr[stat_idx].map_page_stat[i] = 'empty';
+          stat_save_arr[stat_idx].map_page_ppn[i] = -1;
+          stat_save_arr[stat_idx].map_page_spare[i] = -1;
+        }
+
+        
+
+        stat_save_arr[stat_idx].step_len = 0;
+        stat_save_arr[stat_idx].step_arr = new Array();
+        stat_save_arr[stat_idx].step_idx = 0;
+      }
+
+      function copy_stat(des, src) {
+
+        stat_save_arr[des].accessed_time = stat_save_arr[src].accessed_time;
+
+        //CMT copy
+        for(var i = 0; i < N_CACHED_MAP_PAGE_PB; i++) {
+          stat_save_arr[des].cmt_ppn[i] = stat_save_arr[src].cmt_ppn[i];
+          stat_save_arr[des].cmt_lpn[i] = stat_save_arr[src].cmt_lpn[i];
+          stat_save_arr[des].cmt_dirty[i] = stat_save_arr[src].cmt_dirty[i];
+          stat_save_arr[des].cmt_access[i] = stat_save_arr[src].cmt_access[i];
+        }
+
+        //GTD copy
+        for(var i = 0; i < GTD_PER_BANK; i++)
+          stat_save_arr[des].gtd_ppn[i] = stat_save_arr[src].gtd_ppn[i];
+
+        //DATA BLK init
+        stat_save_arr[des].data_page_to_write = stat_save_arr[src].data_page_to_write;
+        stat_save_arr[des].data_free_blk_idx = stat_save_arr[src].data_free_blk_idx;
+        for(var i = 0; i < DATA_PAGES_PER_BANK; i++) {
+          stat_save_arr[des].data_page_stat[i] = stat_save_arr[src].data_page_stat[i];
+          stat_save_arr[des].data_page_data[i] = stat_save_arr[src].data_page_data[i];
+          stat_save_arr[des].data_page_spare[i] = stat_save_arr[src].data_page_spare[i];
+        }
+        //MAP BLK init
+        stat_save_arr[des].map_page_to_write = stat_save_arr[src].map_page_to_write;
+        stat_save_arr[des].map_free_blk_idx = stat_save_arr[src].map_free_blk_idx;
+        for(var i = 0; i < MAP_PAGES_PER_BANK; i++) {
+          stat_save_arr[des].map_page_stat[i] = stat_save_arr[src].map_page_stat[i];
+          stat_save_arr[des].map_page_ppn[i] = stat_save_arr[src].map_page_ppn[i];
+          stat_save_arr[des].map_page_spare[i] = stat_save_arr[src].map_page_spare[i];
+        }
+        console.log("MAP_PAGES_PER_BANK: " + MAP_PAGES_PER_BANK);
+        console.log("map_page_ppn[0] of des: " + stat_save_arr[des].map_page_ppn[0]);
+        console.log("map_page_ppn[0] of src: " + stat_save_arr[src].map_page_ppn[0]);
+      }
+
+      initialize();
+      function initialize() {
+        for(var i = 0; i < N_CACHED_MAP_PAGE_PB; i++)
+        CMT_add_row();
+
+        for(var i = 0; i < GTD_PER_BANK; i++)
+          GTD_add_columns();
+        GTD_get_LPN(GTD_PER_BANK - 1).css("border-right", "2px solid #CCC");
+        GTD_get_map_page(GTD_PER_BANK - 1).css("border-right", "2px solid #CCC");
+
+        for(var i = 0; i < PAGES_PER_BLK; i++)
+          DATA_BLK_add_row(0);
+        for(var i = 0; i < DATA_BLKS_PER_BANK - 1; i++)
+          DATA_BLK_increase();
+        for(var i = 0; i < DATA_BLKS_PER_BANK * PAGES_PER_BLK; i++) {
+          DATA_BLK_get_Page(i);
+          DATA_BLK_get_Data(i);
+          DATA_BLK_get_LPN(i);
+          DATA_BLK_get_State(i);
+        }
+
+        for(var i = 0; i < PAGES_PER_BLK; i++)
+          MAP_BLK_add_row(0);
+        for(var i = 0; i < MAP_BLKS_PER_BANK - 1; i++)
+          MAP_BLK_increase();
+        for(var i = 0; i < MAP_BLKS_PER_BANK * PAGES_PER_BLK; i++) {
+          MAP_BLK_get_Page(i);
+          MAP_BLK_get_PPN(i);
+          MAP_BLK_get_LPN(i);
+          MAP_BLK_get_State(i);
+        }
+      }
+      
+
+      // //tets
+      // for(var i = 0; i < GTD_PER_BANK; i++)
+      //   GTD_get_map_page(i).html(i + 1);
+
+
+
+      function CMT_add_row() {
+        $("#CMT").append('<tr id = "CMT_row' + CMT_numofRAW +  '"><tr>');
+        for(var i = 0; i < 4; i++) {
+          if(i == 0)
+            $("#CMT_row"+CMT_numofRAW).append('<td style="border-left: 2px solid #CCC;"></td>');
+          else if(i == 1)
+            $("#CMT_row"+CMT_numofRAW).append('<td>none</td>');
+          else if(i == 3)
+            $("#CMT_row"+CMT_numofRAW).append('<td style="border-right: 2px solid #CCC;">0</td>');
+          else
+            $("#CMT_row"+CMT_numofRAW).append('<td>0</td>');
+        }
+        $("#CMT_row" + CMT_numofRAW).css("border-bottom", "1px solid #CCC");
+        if(CMT_numofRAW == N_CACHED_MAP_PAGE_PB - 1) {
+          $("#CMT_row" + CMT_numofRAW).css("border-bottom", "2px solid #CCC").css("border-bottom-left-radius", "5px");
+        }
+        CMT_numofRAW++;
+      }
+      function OPERATION_add_row() {
+        $("#OPERATION").append('<tr id = "OPERATION_row' + OPERATION_numofRAW +  '"><tr>');
+        for(var i = 0; i < 4; i++) {
+          if(i == 0)
+            $("#OPERATION_row"+OPERATION_numofRAW).append('<td style="border-left: 2px solid #CCC;">' + (OPERATION_numofRAW + 1) + '</td>');
+          else if(i == 1)
+            $("#OPERATION_row"+OPERATION_numofRAW).append('<td></td>');
+          else if(i == 3)
+            $("#OPERATION_row"+OPERATION_numofRAW).append('<td style="border-right: 2px solid #CCC;"></td>');
+          else
+            $("#OPERATION_row"+OPERATION_numofRAW).append('<td></td>');
+        }
+        if(OPERATION_numofRAW == OPERATION_ROWS - 1) 
+          $("#OPERATION_row"+OPERATION_numofRAW).css("border-bottom", "2px solid #CCC");
+        else
+          $("#OPERATION_row"+OPERATION_numofRAW).css("border-bottom", "1px solid #CCC"); 
+        OPERATION_numofRAW++;
+      }
+      function GTD_add_columns() {
+        var len = $("#GTD").children().first().children().children().length;
+
+        if(len == GTD_PER_BANK) {
+          $('<td style="border-top: 2px solid #CCC; border-bottom: 1px solid #CCC; width: 35px;"> </td>').appendTo($("#GTD").children().first().children());
+          $('<td style="border-bottom: 2px solid #CCC; width: 35px;"> </td>').appendTo($("#GTD").children().eq(1).children());
+        } else {
+          $('<td style="border-top: 2px solid #CCC; border-bottom: 1px solid #CCC; width: 35px;"> </td>').appendTo($("#GTD").children().first().children());
+          $('<td style="border-bottom: 2px solid #CCC; width: 35px;"> </td>').appendTo($("#GTD").children().eq(1).children());
+        }
+        
+
+        var i = $("#GTD").children().first().children().children().length - 1;
+
+        $("#GTD").children().first().children().children().eq(i).html(i - 1);
+        if(i == GTD_PER_BANK) {
+
+        }
+        var map_page = GTD_get_map_page(i - 1);
+        map_page.html('');
+      }
+      function DATA_BLK_add_row(blk_idx) {
+        $("#DATA_BLK" + blk_idx).append('<tr id = "DATA_page_row' + DATA_numofPAGE +  '"><tr>');
+        for(var i = 0; i < 4; i++) {
+          if(i == 0) {
+            $("#DATA_page_row"+DATA_numofPAGE).append('<td style="border-left: 2px solid #CCC;">' + DATA_numofPAGE + '</td>');
+          }
+          else if (i == 3) {
+            $("#DATA_page_row"+DATA_numofPAGE).append('<td style="border-right: 2px solid #CCC;">empty</td>');
+          }
+          else {
+            $("#DATA_page_row"+DATA_numofPAGE).append('<td></td>');
+          }
+        }
+        $("#DATA_page_row"+DATA_numofPAGE).css("border-bottom", "1px solid #CCC");
+        if(DATA_numofPAGE == PAGES_PER_BLK - 1) {
+          $("#DATA_page_row"+DATA_numofPAGE).css("border-bottom", "2px solid #CCC");
+        }
+        DATA_numofPAGE++;
+      }
+      function DATA_BLK_increase() {
+        var origin = "#DATA_BLK" + (DATA_numofBLK - 1);
+        var temp = $(origin).clone();
+        temp.appendTo("#body").animate({
+          top: 350,
+          left: $(origin).position().left + 250
+        }, 0);
+        temp.attr("id", "DATA_BLK" + (DATA_numofBLK));
+        temp.attr("class", "DATA_BLK");
+        DATA_numofBLK++;
+        for(var i = 0; i < PAGES_PER_BLK; i++) {
+          DATA_BLK_get_Page(DATA_numofPAGE).html(DATA_numofPAGE);
+          DATA_numofPAGE++;
+        }
+      }
+
+      function MAP_BLK_add_row(blk_idx) {
+        $("#MAP_BLK" + blk_idx).append('<tr id = "MAP_page_row' + MAP_numofPAGE +  '"><tr>');
+        for(var i = 0; i < 4; i++) {
+          if(i == 0) {
+            var page_num = MAPtoDATA_page(MAP_numofPAGE);
+            $("#MAP_page_row"+MAP_numofPAGE).append('<td style="border-left: 2px solid #CCC;">' + page_num + '</td>');
+          }
+          else if (i == 3) {
+            $("#MAP_page_row"+MAP_numofPAGE).append('<td style="border-right: 2px solid #CCC;">empty</td>');
+          }
+          else {
+            $("#MAP_page_row"+MAP_numofPAGE).append('<td></td>');
+          }
+        }
+        $("#MAP_page_row"+MAP_numofPAGE).css("border-bottom", "1px solid #CCC");
+        if(MAP_numofPAGE == PAGES_PER_BLK - 1) {
+          $("#MAP_page_row"+MAP_numofPAGE).css("border-bottom", "2px solid #CCC");
+        }
+        MAP_numofPAGE++;
+      }
+      function MAP_BLK_increase() {
+        var origin = "#MAP_BLK" + (MAP_numofBLK - 1);
+        var temp = $(origin).clone();
+        temp.appendTo("#body").animate({
+          top: 570,
+          left: $(origin).position().left + 250
+        }, 0);
+        temp.attr("id", "MAP_BLK" + (MAP_numofBLK));
+        temp.attr("class", "MAP_BLK");
+        MAP_numofBLK++;
+        for(var i = 0; i < PAGES_PER_BLK; i++) {
+          var page_num = MAPtoDATA_page(MAP_numofPAGE);
+          MAP_BLK_get_Page(MAP_numofPAGE).html(page_num);
+          MAP_numofPAGE++;
+        }
+      }
+
+      function MAPtoDATA_page(page_num) {
+        return page_num + (DATA_BLKS_PER_BANK * PAGES_PER_BLK);
+      }
+
+      function DATAtoMAP_page(page_num) {
+        return page_num - (DATA_BLKS_PER_BANK * PAGES_PER_BLK);
+      }
+
+      function CMT_get_PPN(slot_idx) {
+        return $('#CMT tr:eq(' + (slot_idx*2+1) + ')>td:eq('+ 0 +')');
+      }
+      function CMT_get_LPN(slot_idx) {
+        return $('#CMT tr:eq(' + (slot_idx*2+1) + ')>td:eq('+ 1 +')');
+      }
+      function CMT_get_Dirty(slot_idx) {
+        return $('#CMT tr:eq(' + (slot_idx*2+1) + ')>td:eq('+ 2 +')');
+      }
+      function CMT_get_Access(slot_idx) {
+        return $('#CMT tr:eq(' + (slot_idx*2+1) + ')>td:eq('+ 3 +')');
+      }
+
+      function OPERATION_get_ROW(slot_idx) {
+        return $('#OPERATION tr:eq(' + (slot_idx*2+1) + ')');
+      }      
+      function OPERATION_get_NUM(slot_idx) {
+        return $('#OPERATION tr:eq(' + (slot_idx*2+1) + ')>td:eq('+ 0 +')');
+      }
+      function OPERATION_get_OPERATION(slot_idx) {
+        return $('#OPERATION tr:eq(' + (slot_idx*2+1) + ')>td:eq('+ 1 +')');
+      }
+      function OPERATION_get_LPN(slot_idx) {
+        return $('#OPERATION tr:eq(' + (slot_idx*2+1) + ')>td:eq('+ 2 +')');
+      }
+      function OPERATION_get_DATA(slot_idx) {
+        return $('#OPERATION tr:eq(' + (slot_idx*2+1) + ')>td:eq('+ 3 +')');
+      }
+
+
+      function GTD_get_map_page(GTD_idx) {
+        return $("#GTD").children().eq(1).children().children().eq(GTD_idx + 1);
+      }
+      function GTD_get_LPN(GTD_idx) {
+        return $("#GTD").children().eq(0).children().children().eq(GTD_idx + 1); 
+      }
+
+      function DATA_BLK_get_Page(page_num) {
+        var blk_num = parseInt(page_num / PAGES_PER_BLK);
+        var page_offset = page_num % PAGES_PER_BLK;
+        return $('#DATA_BLK' + (blk_num) + ' tr:eq(' + (page_offset*2+1) + ')>td:eq('+ 0 +')');
+      }
+      function DATA_BLK_get_Data(page_num) {
+        var blk_num = parseInt(page_num / PAGES_PER_BLK);
+        var page_offset = page_num % PAGES_PER_BLK;
+        return $('#DATA_BLK' + (blk_num) + ' tr:eq(' + (page_offset*2+1) + ')>td:eq('+ 1 +')');
+      }
+      function DATA_BLK_get_LPN(page_num) {
+        var blk_num = parseInt(page_num / PAGES_PER_BLK);
+        var page_offset = page_num % PAGES_PER_BLK;
+        return $('#DATA_BLK' + (blk_num) + ' tr:eq(' + (page_offset*2+1) + ')>td:eq('+ 2 +')');
+      }
+      function DATA_BLK_get_State(page_num) {
+        var blk_num = parseInt(page_num / PAGES_PER_BLK);
+        var page_offset = page_num % PAGES_PER_BLK;
+        return $('#DATA_BLK' + (blk_num) + ' tr:eq(' + (page_offset*2+1) + ')>td:eq('+ 3 +')');
+      }
+
+
+      function MAP_BLK_get_Page(page_num) {
+        var blk_num = parseInt(page_num / PAGES_PER_BLK);
+        var page_offset = page_num % PAGES_PER_BLK;
+        return $('#MAP_BLK' + (blk_num) + ' tr:eq(' + (page_offset*2+1) + ')>td:eq('+ 0 +')');
+      }
+      function MAP_BLK_get_PPN(page_num) {
+        var blk_num = parseInt(page_num / PAGES_PER_BLK);
+        var page_offset = page_num % PAGES_PER_BLK;
+        return $('#MAP_BLK' + (blk_num) + ' tr:eq(' + (page_offset*2+1) + ')>td:eq('+ 1 +')');
+      }
+      function MAP_BLK_get_LPN(page_num) {
+        var blk_num = parseInt(page_num / PAGES_PER_BLK);
+        var page_offset = page_num % PAGES_PER_BLK;
+        return $('#MAP_BLK' + (blk_num) + ' tr:eq(' + (page_offset*2+1) + ')>td:eq('+ 2 +')');
+      }
+      function MAP_BLK_get_State(page_num) {
+        var blk_num = parseInt(page_num / PAGES_PER_BLK);
+        var page_offset = page_num % PAGES_PER_BLK;
+        return $('#MAP_BLK' + (blk_num) + ' tr:eq(' + (page_offset*2+1) + ')>td:eq('+ 3 +')');
+      }
+    </script>
+  </body>
+</html>

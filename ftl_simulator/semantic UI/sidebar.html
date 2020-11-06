@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="semantic/semantic.css">
+    <script
+      src="https://code.jquery.com/jquery-3.1.1.min.js"
+      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+      crossorigin="anonymous"></script>
+    <script src="semantic/semantic.js"></script>
+  </head>
+  <style>
+    table {
+        border-collapse: collapse;
+        text-align: center;
+        line-height: 1.5;
+        border-collapse:collapse;
+        empty-cells: show | inherit;
+        font-size: 12px;
+    }
+    table th {
+      border:1px solid gray;
+      width: 26.25px;
+      height: : 7.5px
+      /*font-weight: bold;*/
+    }
+    table td {
+      border:1px solid gray;
+      width: 26.25px;
+      height: : 7.5px
+      border-bottom: 1px solid #ccc;
+    }
+    body {
+      padding: 1rem;
+    }
+    h1 {
+      border-bottom: 1px solid #ccc;
+    }
+    #PMT {
+      position: absolute;
+      left : 200px;
+      top : 160px;
+    }
+     #OPERATION {
+      position: absolute;
+      left : 1000px;
+      top : 80px;
+      display: none;
+    }
+    #Operate {
+      position: absolute;
+      left : 900px;
+      top : 80px;
+      display: none;
+    }
+    .BLOCK {
+      position:absolute;
+      left : 500px;
+      top : 160px;
+    }
+   
+    .focus {
+      /* border:5px solid red; */
+      background: #F08080;
+    }
+  </style>
+  <body id="body">
+   <div class="ui sidebar inverted vertical menu">
+    <a class="item">
+      1
+    </a>
+    <a class="item">
+      2
+    </a>
+    <a class="item">
+      3
+    </a>
+  </div>
+  <div class="pusher">
+    <!-- Site content !-->
+    <!-- Hello -->
+    <button id = "menu" class = "ui button">Menu</button>
+  </div>
+  <script type="text/javascript">
+    $("#menu").click(function() {
+      $('.ui.sidebar').sidebar('toggle');
+    });
+    
+    
+    var cmt_page = 422132;
+    var pages_per_blk = 3123123;
+    var url = "./dropdown.html?cmt_page=" + cmt_page + "&pages_per_blk=" + pages_per_blk;
+    $(location).attr('href', url);
+
+
+  </script>
+  </body>
+</html>

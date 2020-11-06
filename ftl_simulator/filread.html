@@ -1,0 +1,64 @@
+<html>
+<head>
+</head>
+<body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script><br/>
+<input id="fUpload" multiple type="file"/>
+<ul id="ulList"></ul>
+<input id="btnShow" type="button" value="Show"/><br/>
+<script>
+var file_name;
+$(document).ready(function(){
+    $("#btnShow").on('click', function () {
+        $("#ulList").empty();
+        var fp = $("#fUpload");
+        var lg = fp[0]
+        .files.length; // get length
+        var items = fp[0].files;
+        var fragment = "";
+        if (lg > 0) {
+            for (var i = 0; i < lg; i++) {
+                var fileName = items[i].name; // get file name
+                var fileSize = items[i].size; // get file size 
+                var fileType = items[i].type; // get file type
+                file_name = fileName;
+              // append li to UL tag to display File info
+             fragment += "<li>" + fileName + " " + fileSize + " bytes. Type :" + fileType + "</li>";
+            }
+           $("#ulList").append(fragment);
+        }
+        read_func();
+    });
+});
+
+function read_func() {
+    var reader = new FileReader();
+    reader.readAsText(file_name, 'euc-kr');
+    console.log()
+}
+
+</script>
+</body>
+</html>
+
+<!--  parsing method
+<!DOCTYPE html>
+<html>
+<body>
+
+<p>Click the button to display the array values after the split.</p>
+
+<button onclick="myFunction()">Try it</button>
+
+<p id="demo"></p>
+
+<script>
+function myFunction() {
+  var str = "How are you doing today?";
+  var res = str.split(" ");
+  document.getElementById("demo").innerHTML = res.length;
+}
+</script>
+
+</body>
+</html> -->
